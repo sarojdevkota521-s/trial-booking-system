@@ -1,0 +1,76 @@
+<h1>Booking Page</h1>
+<h3>welcome to the booking page</h3>
+<style>
+    .booking-container{
+        display:grid;
+        grid-template-columns: 3fr 2fr ;
+
+    }
+</style>
+<div class ="booking-container">
+    <div>
+        <h2>please fill the form to book {{ selected_vehicle_name }}</h2>
+
+
+        <form action="" method="post">
+            {% csrf_token %}
+            <label for="fname">Full Name:</label><br>
+            <input type="text" id="fname" name="fname" placeholder="Enter your full name"><br>
+            <label for="phone">Phone Number:</label><br>
+            <input type="tel" id="phone" name="phone" placeholder="Enter your phone number"><br>
+            <label for="package">Select Package:</label><br>
+            <select id="package" name="package">
+                {% for i in packages %}
+                <option value="{{i.id}}">{{i.package_name}}</option>
+                {% endfor %}
+            </select><br><br>
+            <label for="vehicle">Select Vehicle:</label><br>
+            <select id="vehicle" name="vehicle">
+    {% for i in vehicle %}
+        <option value="{{ i.id }}"
+            {% if i.id|stringformat:"s" == selected_vehicle_id %}
+                selected
+            {% endif %}
+        >
+            {{ i.name }}
+        </option>
+    {% endfor %}
+</select><br><br>
+
+            <label for="message">Message:</label><br>
+            <input type="text" id="message" name="message" placeholder="Any special message?"><br><br>
+            <input type="submit" value="Book Now">
+        </form>
+    </div>
+    <div>
+        <h2>Vehicle: {{ selected_vehicle_name }}</h2>
+    
+        {% comment %} {% for i in package %}
+           {% if selected_vehicle_name == "car" %}
+           {% if i.vehicle.name == "car" %}
+            <p>Package Name: {{i.package_name}}</p>
+            <p>Price: {{i.price}}</p>
+            <p>Per day time: {{i.time}}</p>
+            <p>Total day: {{i.duration_days}}</p>
+            <hr>
+           
+            {% endif %}
+             {% elif selected_vehicle_name == "bike" %}
+            {% if i.vehicle.name == "bike" %}
+            <p>Package Name: {{i.package_name}}</p>
+            <p>Price: {{i.price}}</p>
+            <p>Per day time: {{i.time}}</p>
+            <p>Total day: {{i.duration_days}}</p>
+            <hr>
+            {% endif %} 
+            {% endif %}
+        {% endfor %} {% endcomment %}
+
+   {% for i in packages %}
+        <p>Package Name: {{i.package_name}}</p>
+        <p>Price: {{i.price}}</p>
+        <p>Per day time: {{i.time}}</p>
+        <p>Total day: {{i.duration_days}}</p>
+        <hr>
+   {% endfor %} 
+    </div>
