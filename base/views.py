@@ -1,6 +1,6 @@
 from urllib import request
 from django.shortcuts import render,redirect
-from .models import Vehicle,Package,Booking
+from .models import Vehicle,Package,Booking,TrialTime
 from django.shortcuts import get_object_or_404
 # Create your views here.
 def home(request):
@@ -21,6 +21,8 @@ def booking(request):
     selected_vehicle_name=request.GET.get('type')
     packages=Package.objects.filter(vehicle__name=selected_vehicle_name)
     vehicles= Vehicle.objects.filter(catogery__name=selected_vehicle_name)
+    booked_time_ids = Booking.objects.values_list('time_id', flat=True)
+    trial_times = TrialTime.objects.exclude(id__in=booked_time_ids)
     
      # if vehicle id is invalid, set to None
     if request.method == 'POST':
@@ -38,6 +40,7 @@ def booking(request):
                 'vehicle': vehicles,
                 'selected_vehicle_id': selected_vehicle_id,
                 'selected_vehicle_name': selected_vehicle_name,
+                'trial_times': trial_times,
                 'error': 'All fields are required'
             })
 
