@@ -35,7 +35,7 @@ def home(request):
 #     available_trial_times = Timeslot.objects.exclude(
 #     id__in=active_booked_timeslot_ids)
 
-#     # Handle Booking Form Submission
+#     
 #     if request.method == 'POST':
 #         fname = request.POST.get('fname')
 #         phone = request.POST.get('phone')
@@ -46,7 +46,7 @@ def home(request):
 #         vehicle_id = request.POST.get('vehicle')
 #         package_id = request.POST.get('package')
         
-#         # 🔒 validation (prevents ValueError)
+#        
 #         if not (fname and phone and vehicle_id and package_id):
 #             messages.error(request, 'All fields are required')
 #             return render(request, 'booking.html', {
@@ -110,7 +110,7 @@ def booking(request):
         id__in=active_booked_timeslot_ids
     )
 
-    # 🔴 HANDLE POST AND RETURN
+    #  HANDLE POST AND RETURN
     if request.method == 'POST':
         fname = request.POST.get('fname')
         phone = request.POST.get('phone')
@@ -148,7 +148,7 @@ def booking(request):
             reverse('esewa') + f'?p={selected_package.id}&uuid={payment_uuid}'
         )
 
-    # 🔵 GET request ONLY reaches here
+   
     return render(request, 'booking.html', {
         'packages': packages,
         'vehicle': vehicles,
@@ -156,13 +156,7 @@ def booking(request):
         'selected_vehicle_id': selected_vehicle_id,
         'selected_vehicle_name': selected_vehicle_name
     })
-    # return render(request, 'booking.html', {
-    #     'packages': packages,
-    #     'vehicle': vehicles,
-    #     'available_trial_times': available_trial_times,
-    #     'selected_vehicle_id': selected_vehicle_id,
-    #     'selected_vehicle_name': selected_vehicle_name
-    # })
+   
 import uuid
 import hashlib
 import hmac
