@@ -1,3 +1,122 @@
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Roboto, sans-serif;
+        background: linear-gradient(135deg, #eef2f7, #dfe7f3);
+        color: #333;
+    }
+
+    h1 {
+        text-align: center;
+        margin-top: 20px;
+        color: #1f3c88;
+    }
+
+    h3 {
+        text-align: center;
+        color: #555;
+        margin-bottom: 30px;
+    }
+
+    .booking-container {
+        max-width: 1100px;
+        margin: auto;
+        display: grid;
+        grid-template-columns: 3fr 2fr;
+        gap: 30px;
+        padding: 30px;
+    }
+
+    /* LEFT FORM SECTION */
+    .booking-container > div:first-child {
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    .booking-container h2 {
+        margin-bottom: 20px;
+        color: #1f3c88;
+    }
+
+    label {
+        font-weight: 600;
+        margin-top: 12px;
+        display: block;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    select {
+        width: 100%;
+        padding: 10px 12px;
+        margin-top: 6px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        transition: 0.3s;
+    }
+
+    input:focus,
+    select:focus {
+        outline: none;
+        border-color: #1f3c88;
+        box-shadow: 0 0 5px rgba(31, 60, 136, 0.3);
+    }
+
+    input[type="submit"] {
+        margin-top: 20px;
+        width: 100%;
+        padding: 12px;
+        background: #1f3c88;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    input[type="submit"]:hover {
+        background: #162d66;
+    }
+
+    /* RIGHT PACKAGE SECTION */
+    .booking-container > div:last-child {
+        background: #f8faff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+    }
+
+    .booking-container > div:last-child h2 {
+        border-bottom: 2px solid #1f3c88;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    .booking-container > div:last-child p {
+        margin: 6px 0;
+        font-size: 14px;
+    }
+
+    .booking-container hr {
+        border: none;
+        border-top: 1px solid #ddd;
+        margin: 15px 0;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+        .booking-container {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
 <h1>Booking Page</h1>
 <h3>welcome to the booking page</h3>
 <style>
@@ -10,7 +129,15 @@
 <div class ="booking-container">
     <div>
         <h2>please fill the form to book {{ selected_vehicle_name }}</h2>
+        
 
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                   <h2 style="color: red;">{{ message }}</h2>
+                </div>
+            {% endfor %}
+        {% endif %}
 
         <form action="" method="post">
             {% csrf_token %}
@@ -24,6 +151,15 @@
                 <option value="{{i.id}}">{{i.package_name}}</option>
                 {% endfor %}
             </select><br><br>
+            <label>Select Time:</label><br>
+<select name="time" required>
+    {% for i in available_trial_times %}
+        <option value="{{ i.id }}">
+            {{ i.time}} 
+        </option>
+    {% endfor %}
+</select><br>
+
             <label for="vehicle">Select Vehicle:</label><br>
             <select id="vehicle" name="vehicle">
     {% for i in vehicle %}
@@ -45,26 +181,7 @@
     <div>
         <h2>Vehicle: {{ selected_vehicle_name }}</h2>
     
-        {% comment %} {% for i in package %}
-           {% if selected_vehicle_name == "car" %}
-           {% if i.vehicle.name == "car" %}
-            <p>Package Name: {{i.package_name}}</p>
-            <p>Price: {{i.price}}</p>
-            <p>Per day time: {{i.time}}</p>
-            <p>Total day: {{i.duration_days}}</p>
-            <hr>
-           
-            {% endif %}
-             {% elif selected_vehicle_name == "bike" %}
-            {% if i.vehicle.name == "bike" %}
-            <p>Package Name: {{i.package_name}}</p>
-            <p>Price: {{i.price}}</p>
-            <p>Per day time: {{i.time}}</p>
-            <p>Total day: {{i.duration_days}}</p>
-            <hr>
-            {% endif %} 
-            {% endif %}
-        {% endfor %} {% endcomment %}
+       
 
    {% for i in packages %}
         <p>Package Name: {{i.package_name}}</p>

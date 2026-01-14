@@ -1,11 +1,16 @@
-from django.db import models
+from datetime import timedelta
+from django.utils import timezone
 
+from django.db import models
+from django.utils.timezone import now
+from django.db.models import Q, UniqueConstraint
 # Create your models here.
 class Catogery(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
+
   
 class Vehicle(models.Model):
     catogery = models.ForeignKey(Catogery, on_delete=models.CASCADE)
@@ -25,29 +30,70 @@ class Package(models.Model):
 
     def __str__(self):
         return f" {self.package_name} - {self.vehicle.name} - {self.price} "
-class TrialTime(models.Model):
-    time=models.CharField(max_length=100)
     
+class Timeslot(models.Model):
+    time=models.CharField(max_length=100)
+
     def __str__(self):
         return self.time
+    
+class TrialTime(models.Model):
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
+    time = models.ForeignKey(Timeslot, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.vehicle.name} - {self.time}"
+
     class Meta:
         ordering = ['time']
+        unique_together = ('vehicle', 'time')
+
 
 class Booking(models.Model):
     vehicle=models.ForeignKey(Vehicle, on_delete=models.CASCADE)
     package=models.ForeignKey(Package, on_delete=models.CASCADE)
-    time=models.ForeignKey(TrialTime, on_delete=models.CASCADE)
+    trial_time=models.ForeignKey(TrialTime, on_delete=models.CASCADE)
     customer_name=models.CharField(max_length=200)
     phone_number=models.CharField(max_length=15)
     message=models.TextField()
-    booking_date=models.DateField(auto_now_add=True)
+    payment_status=models.BooleanField(default=False)
+    payment_uuid = models.CharField(max_length=100, blank=True, null=True)
+    booking_date = models.DateField(auto_now_add=True)
+    expiry_date = models.DateField(blank=True, null=True)
+    is_active=models.BooleanField(default=False)
+
     
+
+    def save(self, *args, **kwargs):
+        is_new = self.pk is None
+
+        # first save to get booking_date
+        super().save(*args, **kwargs)
+
+        # set expiry date on creation
+        if is_new and not self.expiry_date:
+            self.expiry_date = self.booking_date + timedelta(
+                days=self.package.duration_days
+            )
+            super().save(update_fields=['expiry_date'])
+
+        # deactivate if expired
+        if self.expiry_date and self.expiry_date < timezone.now().date():
+            if self.is_active:
+                self.is_active = False
+                super().save(update_fields=['is_active'])
+
 
     def __str__(self):
         return f"Booking for {self.vehicle.name} by {self.customer_name}"
+
     
+
     class Meta:
-        ordering = ['-booking_date']
-
-
-
+        constraints = [
+          UniqueConstraint(
+            fields=['vehicle', 'trial_time'],
+            condition=Q(is_active=True),
+            name='unique_active_booking'
+        )
+    ]

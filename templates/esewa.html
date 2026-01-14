@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eSewa Integration</title>
+<body>
+     {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                   <h2 style="color: red;">{{ message }}</h2>
+                </div>
+            {% endfor %}
+        {% endif %}
+    <h1>eSewa Payment Gateway Integration price is {{ price }}</h1>
+ <form action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST">
+
+<input type="hidden" name="amount" value="{{ price }}">
+<input type="hidden" name="tax_amount" value="0">
+<input type="hidden" name="total_amount" value="{{ total_amount }}">
+<input type="hidden" name="transaction_uuid" value="{{ transaction_uuid }}">
+<input type="hidden" name="product_code" value="{{ product_code }}">
+<input type="hidden" name="product_service_charge" value="0">
+<input type="hidden" name="product_delivery_charge" value="0">
+
+<input type="hidden" name="success_url" value="http://127.0.0.1:8000/esewa/success/">
+<input type="hidden" name="failure_url" value="http://127.0.0.1:8000/esewa/failure/">
+
+<input type="hidden" name="signed_field_names" value="{{ signed_field_names }}">
+<input type="hidden" name="signature" value="{{ signature }}">
+
+<button type="submit">Pay with eSewa</button>
+</form>
+</body>
+</html>
