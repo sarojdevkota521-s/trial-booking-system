@@ -1,0 +1,51 @@
+ 
+
+    .main-container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+
+    .section-padding {
+      padding: 80px 0;
+    }
+
+    .title-main {
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 1rem;
+    }
+
+    .subtitle {
+      font-size: 1.25rem;
+      color: #4a5568;
+      margin-bottom: 3.5rem;
+    }
+
+    .contact-icon-circle {
+      width: 60px;
+      height: 60px;
+      background: #3b82f6;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+    }
+
+    .info-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 2rem;
+    }
+
+    .form-control, .form-control:focus {
+      border: 1px solid #cbd5e0;
+      background: #ffffff;
+      color: #2d3748;
+      box-shadow: none;
+    }

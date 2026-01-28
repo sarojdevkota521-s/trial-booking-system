@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'base.apps.BaseConfig',
+    'account'
 ]
 
 MIDDLEWARE = [
@@ -130,4 +131,23 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media '
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com' # Use your provider's SMTP server
+EMAIL_PORT = 587 
+EMAIL_USE_TLS = True
+# For Gmail, you need an App Password (not your regular password)
+# after enabling 2-step verification in your Google Account security settings
+EMAIL_HOST_USER = 'sarojdevkota521@gmail.com'
+EMAIL_HOST_PASSWORD = 'wero tmoz bnkt awjb'
+
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Add custom context processor for notifications
+# TEMPLATES[0]['OPTIONS']['context_processors'] += [
+#     'base.context_processors.notification_count',
+# ]
+

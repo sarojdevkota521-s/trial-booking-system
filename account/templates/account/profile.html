@@ -1,0 +1,147 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  .profile-wrapper {
+    max-width: 1000px;
+    margin: auto;
+  }
+
+  .profile-card {
+    display: flex;
+    gap: 30px;
+    padding: 25px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+  }
+
+  .profile-avatar img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #4f46e5;
+  }
+
+  .profile-info h2 {
+    margin: 0;
+  }
+
+  .profile-info p {
+    color: #666;
+    margin-top: 5px;
+  }
+
+  .info-table th {
+    text-align: left;
+    padding-right: 15px;
+    color: #555;
+  }
+
+  .booking-section {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  }
+
+  .booking-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .booking-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 20px;
+  }
+
+  .badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .badge-success {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .badge-danger {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+</style>
+
+<div class="profile-wrapper">
+
+  <!-- PROFILE CARD -->
+  <div class="profile-card">
+    <div class="profile-avatar">
+      <img src="{% static 'images/avatar.svg' %}">
+    </div>
+
+    <div class="profile-info">
+      <h2>{{ user.username }}</h2>
+      <p>{{ user.email }}</p>
+
+      <table class="info-table">
+        <tr>
+          <th>Username</th>
+          <td>{{ user.username }}</td>
+        </tr>
+        <tr>
+          <th>Email</th>
+          <td>{{ user.email }}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- BOOKINGS -->
+  <div class="booking-section">
+    <h3>My Bookings</h3>
+    <hr>
+
+    {% for booking in obj %}
+      <div class="booking-card">
+        <div class="booking-grid">
+          <div><strong>Student Name:</strong></div>
+          <div>{{ booking.customer_name }}</div>
+
+          <div><strong>Vehicle:</strong></div>
+          <div>{{ booking.vehicle }}</div>
+
+          <div><strong>Trial Time:</strong></div>
+          <div>{{ booking.trial_time.time }}</div>
+
+          <div><strong>Package:</strong></div>
+          <div>{{ booking.package.package_name }}</div>
+
+          <div><strong>Price:</strong></div>
+          <div>Rs. {{ booking.package.price }}</div>
+
+          <div><strong>Payment Status:</strong></div>
+          <div>
+            {% if booking.payment_status %}
+              <span class="badge badge-success">Paid</span>
+            {% else %}
+              <span class="badge badge-danger">Pending</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p>No bookings found.</p>
+    {% endfor %}
+  </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'main.html' %}   
+{% load static %}
+
+{% block title %} Details {% endblock %}
+
+{% block content %}
+<div class="detail-section">
+    <h1>Detail Page</h1>
+    <p>This is the detail page of our website.</p>
+    <img src="{% static 'images/detail_image.jpg' %}" alt="Detail Image" class="detail-image">
+    <p>Here you can find more information about our services and offerings.</p>
+{% comment %} <table class="detail-table" style="border:3px solid black;" cellpadding="8">
+  <tr>
+    <th>Vehicle / Time</th>
+    {% for t in time_slots %}
+      <th>{{ t.time }}</th>
+    {% endfor %}
+  </tr>
+    {% for v in vehicles %}
+        <tr>
+        <td>{{ v.name }}</td>
+        {% for t in time_slots %}
+            <td style="text-align: center;">
+            {% if (v.id, t.id) in availability %}
+                <span style="color: red; font-weight: bold;">Booked</span>
+            {% else %}
+            <span style="color: green; font-weight: bold;">Available</span>
+            {% endif %}
+            </td>
+        {% endfor %}
+        </tr>
+    {% endfor %}
+</table> {% endcomment %}
+<table class="detail-table" style="border:3px solid black; width: 100%;" cellpadding="8">
+  <thead>
+    <tr>
+      <th>Vehicle / Time</th>
+      {% for t in time_slots %}
+        <th>{{ t.time }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in table_data %}
+      <tr>
+        <td>**{{ row.vehicle_name }}**</td>
+        {% for is_booked in row.slots %}
+          <td style="text-align: center;">
+            {% if is_booked %}
+              <span style="color: red; font-weight: bold;">Booked</span>
+            {% else %}
+              <span style="color: green; font-weight: bold;">Available</span>
+            {% endif %}
+          </td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+{% endblock %}

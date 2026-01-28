@@ -14,6 +14,7 @@
             {% endfor %}
         {% endif %}
     <h1>eSewa Payment Gateway Integration price is {{ price }}</h1>
+    <h2> just click on the button below to pay with eSewa</h2>
  <form action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST">
 
 <input type="hidden" name="amount" value="{{ price }}">

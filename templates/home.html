@@ -1,4 +1,6 @@
-<style>
+{% extends "main.html" %}
+{% load static %}
+ {% comment %} <style>
     body {
         margin: 0;
         padding: 0;
@@ -60,7 +62,13 @@
     .book-btn:hover {
         background: #0056b3;
     }
-</style>
+</style>  {% endcomment %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/vehicle.css' %}">
+{% endblock %}
+
+{% block content %}
 
  {% if messages %}
             {% for message in messages %}
@@ -105,3 +113,4 @@
         </div>
     {% endfor %}
 </div>
+{% endblock %}

@@ -8,7 +8,11 @@ from django.contrib import messages
 from django.utils import timezone
 from django.views import View as view
 from django.urls import reverse
+from django.utils import timezone
+from django.db.models import Exists, OuterRef
+from django.contrib.auth.decorators import login_required
 # Create your views here.
+
 def home(request):
     c=Vehicle.objects.filter(catogery__name='car')
     b=Vehicle.objects.filter(catogery__name='bike')
@@ -19,6 +23,87 @@ def home(request):
         'bike':b
     }
     return render(request, 'home.html',context)
+def about(request):
+    booked_vehicles = Booking.objects.filter(is_active=True).count()
+    booked_car= Booking.objects.filter(is_active=True, vehicle__catogery__name='car').count()
+    booked_bike= Booking.objects.filter(is_active=True, vehicle__catogery__name='bike').count()
+    available_vehicles = Vehicle.objects.count() 
+    available_car = Vehicle.objects.filter(catogery__name='car').count()
+    available_bike = Vehicle.objects.filter(catogery__name='bike').count() 
+    context = {
+       
+        'available_vehicles': available_vehicles,
+        'available_car': available_car,
+        'available_bike': available_bike
+    }
+
+    return render(request, 'about.html', context)
+
+def detail(request):
+    # time_slots=Timeslot.objects.all()
+    
+
+    # context={
+    #     'time_slots':time_slots,
+    #     'availability':availability
+
+    # }
+#     vehicles = Vehicle.objects.all()
+#     time_slots = Timeslot.objects.all()
+   
+
+#     bookings = Booking.objects.filter(is_active=True).values_list(
+#     'vehicle_id', 'trial_time__time_id'
+# )
+#     ts=set()
+#     for (v_id, t_id) in bookings:
+#         ts.add((v_id, t_id))
+   
+    
+     
+#     at=TrialTime.objects.all().values_list(
+#     'vehicle_id', 'time_id'
+# )
+   
+#     context = {
+#         'vehicles': vehicles,
+#         'time_slots': time_slots,
+#         "total":at,
+       
+#         'availability': ts
+        
+#     }
+
+#     return render(request, 'detail.html',context)
+    vehicles = Vehicle.objects.all()
+    time_slots = Timeslot.objects.all()
+
+    # Get active bookings as a set of (vehicle_id, time_id) for fast lookup
+    booked_pairs = set(
+        Booking.objects.filter(is_active=True).values_list('vehicle_id', 'trial_time__time_id')
+    )
+
+    # Build a "grid" of data
+    table_data = []
+    for vehicle in vehicles:
+        row = {
+            'vehicle_name': vehicle.name,
+            'slots': []
+        }
+        for slot in time_slots:
+            # Check if this specific vehicle and time slot is in our booked set
+            is_booked = (vehicle.id, slot.id) in booked_pairs
+            row['slots'].append(is_booked)
+        table_data.append(row)
+
+    context = {
+        'time_slots': time_slots,
+        'table_data': table_data,
+    }
+    return render(request, 'detail.html', context)
+
+def contact(request):
+    return render(request, 'contact.html')
 
 # def booking(request):
 #     # from home page (?vehicle=ID)
@@ -93,6 +178,7 @@ def home(request):
 #     return redirect(
 #     reverse('esewa') + f'?p={selected_package.id}&uuid={payment_uuid}'
 # )
+@login_required(login_url='login')
 def booking(request):
 
     selected_vehicle_id = request.GET.get('vehicle')
@@ -109,6 +195,8 @@ def booking(request):
     available_trial_times = Timeslot.objects.exclude(
         id__in=active_booked_timeslot_ids
     )
+
+    
 
     #  HANDLE POST AND RETURN
     if request.method == 'POST':
@@ -131,9 +219,11 @@ def booking(request):
             vehicle_id=selected_vehicle_id
         )
 
+
         payment_uuid = str(uuid.uuid4())
 
         Booking.objects.create(
+            user=request.user,
             customer_name=fname,
             phone_number=phone,
             trial_time=selected_trial_time,

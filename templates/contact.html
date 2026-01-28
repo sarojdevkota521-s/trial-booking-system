@@ -1,0 +1,119 @@
+{% extends 'main.html' %}   
+{% load static %}
+{% block title %}Contact Us{% endblock %}
+
+{% block extra_css %} 
+<link rel="stylesheet" href="{% static 'css/about.css' %}">
+{% endblock %}
+
+{% block content %}
+
+
+<section class="section-padding">
+  <div class="container main-container">
+    <div class="row g-5">
+        <!-- Left - Contact Information -->
+        <div class="col-lg-5">
+          <div class="p-5 p-md-5">
+            <h2 class="title-main text-center text-lg-start">Contact Information</h2>
+            <p class="subtitle text-center text-lg-start">
+              We're here to help! Reach out to us through any of the following methods.
+            </p>
+
+            <div class="d-flex align-items-center mb-4">
+              <div class="contact-icon-circle me-3">
+                <i class="bi bi-geo-alt-fill"></i>
+              </div>
+              <div>
+                <h5 class="mb-1">Office Address</h5>
+                <p class="mb-0 text-muted">
+                  123 Main Street,<br>
+                  City, State, ZIP Code
+                </p>
+              </div>
+            </div>
+            <div class="d-flex align-items-center mb-4">
+              <div class="contact-icon-circle me-3">
+                <i class="bi bi-clock-fill"></i>
+              </div>
+              <div>
+                <h5 class="mb-1">Working Hours</h5>
+                <p class="mb-0 text-muted">
+                  Monday - Friday: 9:00 AM - 6:00 PM<br>
+                  Saturday - Sunday: Closed
+                </p>
+              </div>
+
+            </div>
+            <div class="d-flex align-items-center mb-4">
+              <div class="contact-icon-circle me-3">
+                <i class="bi bi-globe"></i>
+              </div>
+              <div>
+                <h5 class="mb-1">Website</h5>
+                <p class="mb-0 text-muted">
+                  www.tms.com<br>
+                  www.support.tms.com
+                </p>
+              </div>
+            </div>
+            <div class="d-flex align-items-center mb-4">
+              <div class="contact-icon-circle me-3">
+                <i class="bi bi-facebook"></i>
+              </div>
+              <div>
+                <h5 class="mb-1">Facebook</h5>
+                <p class="mb-0 text-muted">
+                  facebook.com/tms<br>
+                  facebook.com/tmssupport
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Right - Contact Form -->
+        <div class="col-lg-7 bg-light"> 
+            <div class="info-card h-100 p-5 p-md-5">
+                <h2 class="title-main">Get in Touch</h2>
+                <p class="subtitle">
+                  Have questions? We'd love to hear from you.
+                </p>
+                <form>
+                  <div class="row g-4">
+                    <div class="col-md-6">
+                        <label for="firstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="firstName" placeholder="First Name" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="lastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" placeholder="Last Name" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="emailAddress" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="emailAddress" placeholder="Email Address" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="phoneNumber" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="phoneNumber" placeholder="Phone Number">
+                    </div>
+                    <div class="col-12">
+                        <label for="subject" class="form-label">Subject</label>
+                        <input type="text" class="form-control" id="subject" placeholder="Subject" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="message" class="form-label">Message</label>
+                        <textarea class="form-control" id="message" rows="6" placeholder="Write your message here..." required></textarea>  
+                    </div>
+                    </div>
+                    <div class="mt-4 text-center text-lg-start">
+                        <button type="submit" class="btn btn-primary btn-lg">Send Message</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+  </div>
+</section>
+
+                    {% endblock %}

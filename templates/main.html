@@ -1,0 +1,117 @@
+{% load static %}
+<html>
+    <head>
+         <link rel="stylesheet" href="{%static 'style.css'%}"> 
+         <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+        <title>{% block title%}{% endblock title%}</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    </head>
+    <body>
+
+    <div style="background-color: #4e4b4bff; padding: 20px; display: flex; align-items:center; justify-content: space-between; font-family: Arial, sans-serif;">
+        
+        <!-- Left: Navigation Links -->
+        <div>
+            <a href="{% url 'home' %}" style="color: white; text-decoration: none; margin-right: 20px;"onmouseover="this.style.backgroundColor='#ede2d2ff'; this.style.color='#000';"
+       onmouseout="this.style.backgroundColor=''; this.style.color='white';">Trial</a>
+
+       <a href="{% url 'about' %}" style="color: white; text-decoration: none; margin-right: 20px;"onmouseover="this.style.backgroundColor='#ede2d2ff'; this.style.color='#000';"
+       onmouseout="this.style.backgroundColor=''; this.style.color='white';">about</a>
+        
+        
+       <a href="{% url 'detail' %}" style="color: white; text-decoration: none; margin-right: 20px;"onmouseover="this.style.backgroundColor='#ede2d2ff'; this.style.color='#000';"
+       onmouseout="this.style.backgroundColor=''; this.style.color='white';">Detail</a>
+
+
+       <a href="{% url 'contact' %}" style="color: white; text-decoration: none; margin-right: 20px;"onmouseover="this.style.backgroundColor='#ede2d2ff'; this.style.color='#000';"
+       onmouseout="this.style.backgroundColor=''; this.style.color='white';">contact</a>
+
+            <input type="text" placeholder="Search..." 
+                   style="padding: 5px; border-radius: 4px; border: none; outline: none;">
+
+            
+
+            
+        </div>
+                  
+
+
+        
+
+        <!-- Right: Signup & Login Buttons -->
+         
+<div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+
+    {% if user.is_authenticated %}
+    
+    <!-- Profile Link Section -->
+     
+        <div style="display: flex; align-items: center; gap: 10px;">
+            
+           <a href="{% url 'profile' request.user.id %}" style="text-decoration: none; color: inherit;"> 
+            
+             <img src="{% static 'avatar.svg' %}"
+             alt="Profile Picture"
+             width="50" height="50"
+             style="border-radius: 50%; object-fit: cover;">
+           
+            <span style="font-weight: bold; color:white">@ {{ request.user.username }}</span>
+
+        </div>
+    </a>
+
+    <!-- Logout Button -->
+    <a href="{% url 'logout' %}">
+        <button style="
+            padding: 6px 14px;
+            border: none;
+            border-radius: 4px;
+            background-color: #2980b9;
+            color: white;
+            cursor: pointer;
+        "
+        onmouseover="this.style.backgroundColor='#1f618d'"
+        onmouseout="this.style.backgroundColor='#2980b9'">
+            Logout
+        </button>
+    </a>
+
+   
+
+</div>
+
+            {% else %}
+            
+            <button style="padding: 6px 12px; margin-right: 10px; border: none; border-radius: 4px; background-color: #27ae60; color: white; cursor: pointer;"onmouseover="this.style.backgroundColor='#1f618d'" 
+                    onmouseout="this.style.backgroundColor='#2980b9'">
+                <a href="{% url 'register' %}" style="color:black; text-decoration:none;">Signup </a>
+            </button>
+            
+            <button style="padding: 6px 12px; margin-right: 10px; border: none; border-radius: 4px; background-color: #27ae60; color: white; cursor: pointer;"onmouseover="this.style.backgroundColor='#1f618d'" 
+                    onmouseout="this.style.backgroundColor='#2980b9'">
+                <a href="{% url 'login' %}" style="color:black; text-decoration:none;">
+                    
+                Login</a>
+            </button>
+            {% endif %}
+            {% comment %}
+            {% if not user.is_authenticated %}
+                <button style="padding: 6px 12px; margin-right: 10px; border: none; border-radius: 4px; background-color: #27ae60; color: white; cursor: pointer;"onmouseover="this.style.backgroundColor='#1f618d'" 
+                        onmouseout="this.style.backgroundColor='#2980b9'">
+                    <a href="{%url 'login'%}" style="color:black; text-decoration:none;">Login </a></button>
+                {% endif %} {% endcomment %}
+        </div>
+    </div>
+        {% block content %}
+        
+        {% endblock %}
+        
+
+
+
+
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.db import models
 from django.utils.timezone import now
 from django.db.models import Q, UniqueConstraint
+from django.contrib.auth.models import User
 # Create your models here.
 class Catogery(models.Model):
     name = models.CharField(max_length=100)
@@ -50,9 +51,10 @@ class TrialTime(models.Model):
 
 
 class Booking(models.Model):
+    user=models.ForeignKey(User, on_delete=models.CASCADE)
     vehicle=models.ForeignKey(Vehicle, on_delete=models.CASCADE)
     package=models.ForeignKey(Package, on_delete=models.CASCADE)
-    trial_time=models.ForeignKey(TrialTime, on_delete=models.CASCADE)
+    trial_time=models.ForeignKey(TrialTime, on_delete=models.CASCADE,  related_name='bookings')
     customer_name=models.CharField(max_length=200)
     phone_number=models.CharField(max_length=15)
     message=models.TextField()
