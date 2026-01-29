@@ -135,7 +135,7 @@ MEDIA_ROOT = BASE_DIR / 'media '
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com' # Use your provider's SMTP server
+EMAIL_HOST = '###.####.###' # Use your provider's SMTP server
 EMAIL_PORT = ###
 EMAIL_USE_TLS = True
 # For Gmail, you need an App Password (not your regular password)
