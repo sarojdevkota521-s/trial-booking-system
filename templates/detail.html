@@ -4,59 +4,155 @@
 {% block title %} Details {% endblock %}
 
 {% block content %}
-<div class="detail-section">
-    <h1>Detail Page</h1>
-    <p>This is the detail page of our website.</p>
-    <img src="{% static 'images/detail_image.jpg' %}" alt="Detail Image" class="detail-image">
-    <p>Here you can find more information about our services and offerings.</p>
-{% comment %} <table class="detail-table" style="border:3px solid black;" cellpadding="8">
-  <tr>
-    <th>Vehicle / Time</th>
-    {% for t in time_slots %}
-      <th>{{ t.time }}</th>
-    {% endfor %}
-  </tr>
-    {% for v in vehicles %}
-        <tr>
-        <td>{{ v.name }}</td>
-        {% for t in time_slots %}
-            <td style="text-align: center;">
-            {% if (v.id, t.id) in availability %}
-                <span style="color: red; font-weight: bold;">Booked</span>
-            {% else %}
-            <span style="color: green; font-weight: bold;">Available</span>
-            {% endif %}
-            </td>
-        {% endfor %}
-        </tr>
-    {% endfor %}
-</table> {% endcomment %}
-<table class="detail-table" style="border:3px solid black; width: 100%;" cellpadding="8">
-  <thead>
-    <tr>
-      <th>Vehicle / Time</th>
-      {% for t in time_slots %}
-        <th>{{ t.time }}</th>
-      {% endfor %}
-    </tr>
-  </thead>
-  <tbody>
-    {% for row in table_data %}
-      <tr>
-        <td>**{{ row.vehicle_name }}**</td>
-        {% for is_booked in row.slots %}
-          <td style="text-align: center;">
-            {% if is_booked %}
-              <span style="color: red; font-weight: bold;">Booked</span>
-            {% else %}
-              <span style="color: green; font-weight: bold;">Available</span>
-            {% endif %}
-          </td>
-        {% endfor %}
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<style>
+    /* General Styling */
+    
 
+    :root {
+        --primary: #2563eb;
+        --success: #059669;
+        --danger: #dc2626;
+        --gray-100: #f3f4f6;
+    }
+
+    .detail-section {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        color: #1f2937;
+    }
+
+    /* Table Styling */
+    .table-container {
+        overflow-x: auto;
+        margin-top: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .detail-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+    }
+
+    .detail-table th {
+        background-color: var(--primary);
+        color: white;
+        padding: 15px;
+        text-align: left;
+    }
+
+    .detail-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid var(--gray-100);
+    }
+
+    .status-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .status-available { background: #dcfce7; color: var(--success); }
+    .status-booked { background: #fee2e2; color: var(--danger); }
+
+    /* Trainer Section Styling */
+    .trainer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 25px;
+        margin-top: 30px;
+    }
+
+    .trainer-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+        border: 1px solid #e5e7eb;
+    }
+
+    .trainer-card:hover { transform: translateY(-5px); }
+
+    .trainer-img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .trainer-info { padding: 20px; }
+    .trainer-name { margin: 0; font-size: 1.25rem; color: #111827; }
+    .trainer-spec { color: var(--primary); font-weight: 500; font-size: 0.9rem; margin: 5px 0; }
+    .trainer-exp { font-size: 0.8rem; color: #6b7280; text-transform: uppercase; }
+    .trainer-bio { font-size: 0.9rem; color: #4b5563; line-height: 1.5; margin-top: 10px; }
+</style>
+
+<div class="detail-section">
+    <header>
+        <h1>Schedule & Team</h1>
+        <p>Explore our available slots and meet our expert trainers.</p>
+    </header>
+
+    <section>
+        <h3>Vehicle Availability</h3>
+        <div class="table-container">
+            <table class="detail-table">
+                <thead>
+                    <tr>
+                        <th>Vehicle</th>
+                        {% for t in time_slots %}
+                            <th>{{ t.time }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in table_data %}
+                        <tr>
+                            <td><strong>{{ row.vehicle_name }}</strong></td>
+                            {% for is_booked in row.slots %}
+                                <td style="text-align: center;">
+                                    {% if is_booked %}
+                                        <span class="status-badge status-booked">Booked</span>
+                                    {% else %}
+                                        <span class="status-badge status-available">Available</span>
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <hr style="margin: 50px 0; border: 0; border-top: 1px solid #e5e7eb;">
+
+    <section>
+        <h3>Meet Our Trainers</h3>
+        <div class="trainer-grid">
+            {% for trainer in trainers %}
+                <div class="trainer-card">
+                    {% if trainer.photo %}
+                        <img src="{{ trainer.photo.url }}" alt="{{ trainer.name }}" class="trainer-img">
+                    {% else %}
+                        <img src="{% static 'avatar.svg' %}" class="trainer-img">
+                    {% endif %}
+                    <div class="trainer-info">
+                        <p class="trainer-exp">{{ trainer.experience_years }} Years Experience</p>
+                        <h4 class="trainer-name">{{ trainer.name }}</h4>
+                        <p class="trainer-spec">{{ trainer.specialization }}</p>
+                        <p class="trainer-bio">{{ trainer.bio|truncatewords:20 }}</p>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No trainers currently available.</p>
+            {% endfor %}
+        </div>
+    </section>
+</div>
 
 {% endblock %}

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        @page { size: A4; margin: 1cm; }
+        body { font-family: Helvetica, sans-serif; color: #333; }
+        .invoice-header { border-bottom: 2px solid #2563eb; padding-bottom: 20px; margin-bottom: 20px; }
+        .logo { font-size: 24px; font-weight: bold; color: #2563eb; }
+        .details-table { width: 100%; margin-bottom: 40px; }
+        .items-table { width: 100%; border-collapse: collapse; }
+        .items-table th { background: #f3f4f6; padding: 10px; border: 1px solid #ddd; }
+        .items-table td { padding: 10px; border: 1px solid #ddd; text-align: center; }
+        .status-paid { color: green; font-weight: bold; }
+        .status-unpaid { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="invoice-header">
+        <div class="logo">Trial<span style="color: #666;">Center</span></div>
+        <p>Invoice #: TC-00{{ booking.id }}<br>Date: {{ booking.booking_date }}</p>
+    </div>
+
+    <table class="details-table">
+        <tr>
+            <td>
+                <strong>Billed To:</strong><br>
+                {{ booking.customer_name }}<br>
+                {{ booking.phone_number }}
+            </td>
+            <td style="text-align: right;">
+                <strong>Payment Status:</strong><br>
+                {% if booking.payment_status %}
+                    <span class="status-paid">PAID</span><br>
+                    <small>Ref: {{ booking.payment_uuid }}</small>
+                {% else %}
+                    <span class="status-unpaid">UNPAID</span>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th>Service / Vehicle</th>
+                <th>Package</th>
+                <th>Trial Time</th>
+                <th>Expiry</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ booking.vehicle.name }}</td>
+                <td>{{ booking.package.name }}</td>
+                <td>{{ booking.trial_time.time }}</td>
+                <td>{{ booking.expiry_date|default:"N/A" }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="margin-top: 50px;">
+        <p><strong>Message/Notes:</strong><br>{{ booking.message }}</p>
+    </div>
+
+    <div style="position: absolute; bottom: 0; text-align: center; width: 100%; font-size: 10px; color: #999;">
+        Thank you for choosing TrialCenter! This is a computer-generated document.
+    </div>
+</body>
+</html>

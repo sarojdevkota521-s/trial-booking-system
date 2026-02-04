@@ -1,13 +1,120 @@
 {% extends 'main.html' %}   
-{% load static %}
+
 {% block title %}Contact Us{% endblock %}
 
 {% block extra_css %} 
-<link rel="stylesheet" href="{% static 'css/about.css' %}">
+
 {% endblock %}
 
 {% block content %}
+<style>
+ 
+.section-padding {
+    padding: 80px 0;
+    background: transparent; 
+}
 
+.main-container {
+    background: #ffffff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Typography */
+.title-main {
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.subtitle {
+    color: #7f8c8d;
+    font-size: 1rem;
+    margin-bottom: 30px;
+}
+
+/* Left Side: Contact Information */
+.contact-icon-circle {
+    width: 50px;
+    height: 50px;
+    background: rgba(52, 152, 219, 0.1);
+    color: #3498db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 1.4rem;
+    transition: all 0.3s ease;
+}
+
+.d-flex:hover .contact-icon-circle {
+    background: #3498db;
+    color: #ffffff;
+    transform: scale(1.1);
+}
+
+.contact-info-text h5 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #34495e;
+}
+
+/* Right Side: Form Styling */
+.bg-light {
+    background-color: #f8fbff !important; /* Slightly bluish light background */
+}
+
+.form-label {
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.form-control {
+    border: 2px solid #e1e8ee;
+    padding: 12px 15px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 0.25 margin rgba(52, 152, 219, 0.1);
+    outline: none;
+}
+
+/* Textarea specifically */
+textarea.form-control {
+    resize: none;
+}
+
+/* Submit Button */
+.btn-primary.btn-lg {
+    background: linear-gradient(135deg, #2980b9, #8e44ad);
+    border: none;
+    padding: 12px 35px;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.btn-primary.btn-lg:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(142, 68, 173, 0.3);
+}
+
+/* Responsive Fixes */
+@media (max-width: 991px) {
+    .main-container {
+        margin: 0 15px;
+    }
+    .col-lg-7.bg-light {
+        border-top: 1px solid #eee;
+    }
+}
+</style>
 
 <section class="section-padding">
   <div class="container main-container">
@@ -79,6 +186,7 @@
                   Have questions? We'd love to hear from you.
                 </p>
                 <form>
+                  
                   <div class="row g-4">
                     <div class="col-md-6">
                         <label for="firstName" class="form-label">First Name</label>

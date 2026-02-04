@@ -14,6 +14,7 @@ class Catogery(models.Model):
 
   
 class Vehicle(models.Model):
+    
     catogery = models.ForeignKey(Catogery, on_delete=models.CASCADE)
     name=models.CharField(max_length=100)
     photo=models.ImageField(upload_to='vehicle_photos/', null=True, blank=True)
@@ -99,3 +100,24 @@ class Booking(models.Model):
             name='unique_active_booking'
         )
     ]
+class ContactMessage(models.Model):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    subject = models.CharField(max_length=255)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} - {self.subject}"
+    
+class Trainer(models.Model):
+    name = models.CharField(max_length=100)
+    photo = models.ImageField(upload_to='trainer_photos/', null=True, blank=True)
+    specialization = models.CharField(max_length=200)
+    experience_years = models.IntegerField()
+    bio = models.TextField()
+
+    def __str__(self):
+        return self.name

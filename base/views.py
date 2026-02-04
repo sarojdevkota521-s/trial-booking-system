@@ -2,7 +2,7 @@ from inspect import signature
 from urllib import request
 import uuid
 from django.shortcuts import render,redirect
-from .models import Vehicle,Package,Booking,TrialTime,Timeslot
+from .models import Vehicle,Package,Booking,TrialTime,Timeslot,ContactMessage,Trainer
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.utils import timezone
@@ -11,22 +11,31 @@ from django.urls import reverse
 from django.utils import timezone
 from django.db.models import Exists, OuterRef
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q, Count 
 # Create your views here.
 
 def home(request):
-    c=Vehicle.objects.filter(catogery__name='car')
-    b=Vehicle.objects.filter(catogery__name='bike')
-    
-    
+    # c=Vehicle.objects.filter(catogery__name='car')
+    # b=Vehicle.objects.filter(catogery__name='bike')
+    base_query = Vehicle.objects.annotate(
+        available_slots_count=Count(
+            'trialtime',
+            filter=~Q(trialtime__bookings__is_active=True),
+            distinct=True
+        )
+    )
+    c = base_query.filter(catogery__name='car')
+    b = base_query.filter(catogery__name='bike')
+    v = base_query.all()
     context={
         'car':c,
-        'bike':b
+        'bike':b,
+        'vehicles':v
+
     }
     return render(request, 'home.html',context)
 def about(request):
-    booked_vehicles = Booking.objects.filter(is_active=True).count()
-    booked_car= Booking.objects.filter(is_active=True, vehicle__catogery__name='car').count()
-    booked_bike= Booking.objects.filter(is_active=True, vehicle__catogery__name='bike').count()
+    
     available_vehicles = Vehicle.objects.count() 
     available_car = Vehicle.objects.filter(catogery__name='car').count()
     available_bike = Vehicle.objects.filter(catogery__name='bike').count() 
@@ -40,43 +49,10 @@ def about(request):
     return render(request, 'about.html', context)
 
 def detail(request):
-    # time_slots=Timeslot.objects.all()
     
-
-    # context={
-    #     'time_slots':time_slots,
-    #     'availability':availability
-
-    # }
-#     vehicles = Vehicle.objects.all()
-#     time_slots = Timeslot.objects.all()
-   
-
-#     bookings = Booking.objects.filter(is_active=True).values_list(
-#     'vehicle_id', 'trial_time__time_id'
-# )
-#     ts=set()
-#     for (v_id, t_id) in bookings:
-#         ts.add((v_id, t_id))
-   
-    
-     
-#     at=TrialTime.objects.all().values_list(
-#     'vehicle_id', 'time_id'
-# )
-   
-#     context = {
-#         'vehicles': vehicles,
-#         'time_slots': time_slots,
-#         "total":at,
-       
-#         'availability': ts
-        
-#     }
-
-#     return render(request, 'detail.html',context)
     vehicles = Vehicle.objects.all()
     time_slots = Timeslot.objects.all()
+    trainers= Trainer.objects.all()
 
     # Get active bookings as a set of (vehicle_id, time_id) for fast lookup
     booked_pairs = set(
@@ -99,85 +75,34 @@ def detail(request):
     context = {
         'time_slots': time_slots,
         'table_data': table_data,
+        'trainers': trainers
     }
     return render(request, 'detail.html', context)
 
 def contact(request):
+    if request.method == "POST":
+        # Extract data from the form
+        first_name = request.POST.get('firstName')
+        last_name = request.POST.get('lastName')
+        email = request.POST.get('emailAddress')
+        phone = request.POST.get('phoneNumber')
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
+
+        # Save to database
+        ContactMessage.objects.create(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            phone=phone,
+            subject=subject,
+            message=message
+        )
+        
+        messages.success(request, "Your message has been sent successfully!")
+        return redirect('contact') 
     return render(request, 'contact.html')
 
-# def booking(request):
-#     # from home page (?vehicle=ID)
-#     selected_vehicle_id = request.GET.get('vehicle')
-#     selected_vehicle_name=request.GET.get('type')
-#     packages=Package.objects.filter(vehicle__name=selected_vehicle_name)
-#     vehicles= Vehicle.objects.filter(catogery__name=selected_vehicle_name)
-    
-#     # Available TrialTimes
-#     active_booked_timeslot_ids = Booking.objects.filter(
-#     is_active=True,
-#     vehicle_id=selected_vehicle_id).values_list( 'trial_time__time_id', flat=True)
-
-#     available_trial_times = Timeslot.objects.exclude(
-#     id__in=active_booked_timeslot_ids)
-
-#     
-#     if request.method == 'POST':
-#         fname = request.POST.get('fname')
-#         phone = request.POST.get('phone')
-#         message = request.POST.get('message')
-#         time_id = request.POST.get('time')
-        
-
-#         vehicle_id = request.POST.get('vehicle')
-#         package_id = request.POST.get('package')
-        
-#        
-#         if not (fname and phone and vehicle_id and package_id):
-#             messages.error(request, 'All fields are required')
-#             return render(request, 'booking.html', {
-#                 "packages": packages,
-#                 'vehicle': vehicles,
-#                 'selected_vehicle_id': selected_vehicle_id,
-#                 'selected_vehicle_name': selected_vehicle_name,
-#                 'available_trial_times': available_trial_times,
-#                 'error': 'All fields are required'
-#             })
-
-#         selected_vehicle = get_object_or_404(Vehicle, id=vehicle_id)
-#         selected_package = get_object_or_404(Package, id=package_id)
-
-#         selected_trial_time = get_object_or_404(TrialTime, time_id=time_id, vehicle_id=selected_vehicle_id)
-
-#         if Booking.objects.filter(
-#         trial_time=selected_trial_time,
-#         is_active=True).exists():
-#             messages.error(request, 'Selected time slot is already booked.')
-#             return render(request, 'booking.html', {
-#         "packages": packages,
-#         'vehicle': vehicles,
-#         'available_trial_times': available_trial_times,
-#         'selected_vehicle_id': selected_vehicle_id,
-#         'selected_vehicle_name': selected_vehicle_name,
-#     })
-    
-        
-#     payment_uuid = str(uuid.uuid4())
-
-#     Booking.objects.create(
-#     customer_name=fname,
-#     phone_number=phone,
-#     trial_time=selected_trial_time,
-#     message=message,
-#     vehicle=selected_vehicle,
-#     package=selected_package,
-#     payment_uuid=payment_uuid,
-#     payment_status=False
-# )
-   
-
-#     return redirect(
-#     reverse('esewa') + f'?p={selected_package.id}&uuid={payment_uuid}'
-# )
 @login_required(login_url='login')
 def booking(request):
 

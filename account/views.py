@@ -188,3 +188,28 @@ def ResetPassword(request, reset_id):
         return redirect('forgot-password')
 
     return render(request, 'account/resetpassword.html')
+
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+
+def generate_invoice(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    
+    # Updated path to include the 'account' directory
+    template_path = 'account/invoice_pdf.html' 
+    
+    context = {'booking': booking}
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Invoice_{booking.id}.pdf"'
+    
+    template = get_template(template_path)
+    html = template.render(context)
+
+    # Generate PDF
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    
+    if pisa_status.err:
+       return HttpResponse(f'Error generating PDF: {pisa_status.err}')
+    return response

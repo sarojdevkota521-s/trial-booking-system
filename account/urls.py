@@ -14,6 +14,7 @@ urlpatterns = [
 
     # path('edit-profile/<str:pk>',views.edit_profile,name='edit-profile'),
      path('profile/<str:pk>/',views.profile,name='profile'),
+     path('invoice/<int:booking_id>/', views.generate_invoice, name='invoice'),
    
    
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

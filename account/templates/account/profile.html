@@ -111,7 +111,10 @@
 
     {% for booking in obj %}
       <div class="booking-card">
+        <h3 style="color: #4e4b4bff; text-align: center;">Trial Center</h3><hr>
+
         <div class="booking-grid">
+          
           <div><strong>Student Name:</strong></div>
           <div>{{ booking.customer_name }}</div>
 
@@ -123,6 +126,9 @@
 
           <div><strong>Package:</strong></div>
           <div>{{ booking.package.package_name }}</div>
+          <div><strong>Date:</strong></div>
+          <div>{{ booking.booking_date }}</div>
+
 
           <div><strong>Price:</strong></div>
           <div>Rs. {{ booking.package.price }}</div>
@@ -136,6 +142,38 @@
             {% endif %}
           </div>
         </div>
+        <style>
+    .download-btn {
+        display: inline-flex;
+        align-items: center;
+        background-color: #2563eb;
+        color: white !important;
+        padding: 10px 20px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: background 0.3s;
+        font-size: 1rem;
+    }
+    
+    .download-btn:hover {
+        background-color: #1d4ed8;
+    }
+
+    .download-icon {
+        margin-right: 10px;
+        font-size: 1.2rem;
+    }
+</style>
+
+<div style="margin-top: 30px; padding: 20px; background: #f8fafc; border-radius: 8px; border: 1px dashed #cbd5e1;">
+    <h2 style="margin-top: 0;">Booking Confirmed!</h2>
+    <p>Your trial has been scheduled successfully. Please download your receipt for your records.</p>
+    
+    <a href="{% url 'invoice' booking.id %}" class="download-btn">
+        <span class="download-icon">📥</span> Download Your Receipt (PDF)
+    </a> 
+</div>
       </div>
     {% empty %}
       <p>No bookings found.</p>

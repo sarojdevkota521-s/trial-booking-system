@@ -79,15 +79,21 @@
         {% endif %}
 
 <h2>Available Cars</h2>
-
 <div class="vehicle-container">
     {% for i in car %}
         <div class="vehicle-card">
             <img src="{{ i.photo.url }}" alt="vehicle image">
-
             <div class="vehicle-name">{{ i.name }}</div>
             <div class="vehicle-category">{{ i.catogery.name }}</div>
-
+            <div class="availability-status">
+    {% if i.available_slots_count > 0 %}
+        <strong>Available Slots: {{ i.available_slots_count }}</strong>
+    {% else %}
+        <span style="color: #d9534f; font-weight: bold;">
+            No time available, stay updated
+        </span>
+    {% endif %}
+</div>
             <a class="book-btn"
                href="{% url 'booking' %}?vehicle={{ i.id }}&type={{ i.catogery.name }}">
                Book Now
@@ -105,6 +111,15 @@
 
             <div class="vehicle-name">{{ i.name }}</div>
             <div class="vehicle-category">{{ i.catogery.name }}</div>
+            <div class="availability-status">
+    {% if i.available_slots_count > 0 %}
+        <strong>Available Slots: {{ i.available_slots_count }}</strong>
+    {% else %}
+        <span style="color: #d9534f; font-weight: bold;">
+            No time available, stay updated
+        </span>
+    {% endif %}
+</div>
 
             <a class="book-btn"
                href="{% url 'booking' %}?vehicle={{ i.id }}&type={{ i.catogery.name }}">
@@ -113,4 +128,6 @@
         </div>
     {% endfor %}
 </div>
+
+\
 {% endblock %}
