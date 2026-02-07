@@ -127,12 +127,13 @@ def booking(request):
     if request.method == 'POST':
         fname = request.POST.get('fname')
         phone = request.POST.get('phone')
+        date=request.POST.get('date')
         message = request.POST.get('message')
         time_id = request.POST.get('time')
         vehicle_id = request.POST.get('vehicle')
         package_id = request.POST.get('package')
 
-        if not all([fname, phone, time_id, vehicle_id, package_id]):
+        if not all([fname, phone,date, time_id, vehicle_id, package_id]):
             messages.error(request, "All fields are required")
             return redirect(request.path)
 
@@ -147,10 +148,12 @@ def booking(request):
 
         payment_uuid = str(uuid.uuid4())
 
+
         Booking.objects.create(
             user=request.user,
             customer_name=fname,
             phone_number=phone,
+            booking_date=date,
             trial_time=selected_trial_time,
             message=message,
             vehicle=selected_vehicle,
@@ -183,7 +186,7 @@ from django.views import View
 from django.shortcuts import render
 from django.http import HttpResponse
 import uuid, hmac, hashlib, base64
-from .models import Package
+
 
 class EsewaView(View):
     def get(self, request, *args, **kwargs):

@@ -49,7 +49,12 @@ class TrialTime(models.Model):
     class Meta:
         ordering = ['time']
         unique_together = ('vehicle', 'time')
+from django.core.exceptions import ValidationError
 
+
+def clean(self):
+    if self.scheduled_date < timezone.now().date():
+        raise ValidationError("You cannot book a vehicle for a past date.")
 
 class Booking(models.Model):
     user=models.ForeignKey(User, on_delete=models.CASCADE)
@@ -61,32 +66,15 @@ class Booking(models.Model):
     message=models.TextField()
     payment_status=models.BooleanField(default=False)
     payment_uuid = models.CharField(max_length=100, blank=True, null=True)
-    booking_date = models.DateField(auto_now_add=True)
+    booking_date = models.DateField()
     expiry_date = models.DateField(blank=True, null=True)
     is_active=models.BooleanField(default=False)
 
+    def is_expired(self):
+        if self.expiry_date and timezone.now() > self.expiry_date:
+            return True
+        return False
     
-
-    def save(self, *args, **kwargs):
-        is_new = self.pk is None
-
-        # first save to get booking_date
-        super().save(*args, **kwargs)
-
-        # set expiry date on creation
-        if is_new and not self.expiry_date:
-            self.expiry_date = self.booking_date + timedelta(
-                days=self.package.duration_days
-            )
-            super().save(update_fields=['expiry_date'])
-
-        # deactivate if expired
-        if self.expiry_date and self.expiry_date < timezone.now().date():
-            if self.is_active:
-                self.is_active = False
-                super().save(update_fields=['is_active'])
-
-
     def __str__(self):
         return f"Booking for {self.vehicle.name} by {self.customer_name}"
 
@@ -95,11 +83,15 @@ class Booking(models.Model):
     class Meta:
         constraints = [
           UniqueConstraint(
-            fields=['vehicle', 'trial_time'],
+            fields=['vehicle', 'trial_time',"booking_date"],
             condition=Q(is_active=True),
-            name='unique_active_booking'
+            name='unique_active_booking_per_date'
         )
     ]
+    def clean(self):
+        if self.booking_date < timezone.now().date():
+            raise ValidationError("You cannot book a vehicle for a past date.")
+
 class ContactMessage(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)

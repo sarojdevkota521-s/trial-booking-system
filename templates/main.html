@@ -168,17 +168,23 @@
                 Login</a>
             </button>
             {% endif %}
-            {% comment %}
-            {% if not user.is_authenticated %}
-                <button style="padding: 6px 12px; margin-right: 10px; border: none; border-radius: 4px; background-color: #27ae60; color: white; cursor: pointer;"onmouseover="this.style.backgroundColor='#1f618d'" 
-                        onmouseout="this.style.backgroundColor='#2980b9'">
-                    <a href="{%url 'login'%}" style="color:black; text-decoration:none;">Login </a></button>
-                {% endif %} {% endcomment %}
+            
         </div>
     </div>
+    {% if messages %}
+    {% for message in messages %}
+    {% if message.tags == 'success' %}
+        <div style="color: green; background-color: lightgreen; padding: 8px; border-radius: 5px;">{{ message }}</div>
+    {% endif %}
+    {% if message.tags == 'error' %}
+        <div style="color: red; background-color: lightcoral; padding: 8px; border-radius: 5px;">{{ message }}</div>
+    {% endif %}
+    {% endfor %}
+{% endif %}
         {% block content %}
         
         {% endblock %}
+
         <style>.footer-section {
     background-color:  #4e4b4bff;
     color: #d1d1d1;
@@ -211,7 +217,7 @@
     width: 30px;
     height: 2px;
     background-color: #3498db;
-}
+} 
 
 .footer-logo {
     color: #fff;
