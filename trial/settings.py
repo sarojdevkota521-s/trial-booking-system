@@ -128,23 +128,24 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media '
-
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = '###.####.###' # Use your provider's SMTP server
-EMAIL_PORT = ###
-EMAIL_USE_TLS = True
-# For Gmail, you need an App Password (not your regular password)
-# after enabling 2-step verification in your Google Account security settings
-EMAIL_HOST_USER = ' useremail@gmail.com'
-EMAIL_HOST_PASSWORD = '#### #### #### ####'
-
-MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
+
+
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = '###.####.###' # Use your provider's SMTP server
+# EMAIL_PORT = ###
+# EMAIL_USE_TLS = True
+# # For Gmail, you need an App Password (not your regular password)
+# # after enabling 2-step verification in your Google Account security settings
+# EMAIL_HOST_USER = ' useremail@gmail.com'
+# EMAIL_HOST_PASSWORD = '#### #### #### ####'
+
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = BASE_DIR / 'media'
 
 # Add custom context processor for notifications
 # TEMPLATES[0]['OPTIONS']['context_processors'] += [

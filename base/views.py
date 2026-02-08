@@ -12,6 +12,7 @@ from django.utils import timezone
 from django.db.models import Exists, OuterRef
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Count 
+from django.utils.timezone import datetime
 # Create your views here.
 
 def home(request):
@@ -103,6 +104,38 @@ def contact(request):
         return redirect('contact') 
     return render(request, 'contact.html')
 
+from django.http import JsonResponse
+
+def get_available_times(request):
+    date_str = request.GET.get('date')
+    vehicle_id = request.GET.get('vehicle_id')
+    
+    if not date_str or not vehicle_id:
+        return JsonResponse({'error': 'Missing data'}, status=400)
+
+    booking_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+
+    # Find bookings where the requested date falls between an existing booking_date and expiry_date
+    conflicting_bookings = Booking.objects.filter(
+        vehicle_id=vehicle_id,
+        is_active=True,
+        booking_date__lte=booking_date,
+        expiry_date__gte=booking_date
+    )
+
+    booked_slot_ids = conflicting_bookings.values_list('trial_time__time_id', flat=True)
+
+    # Get slots for this specific vehicle that aren't in the booked list
+    available_slots = TrialTime.objects.filter(
+        vehicle_id=vehicle_id
+    ).exclude(time_id__in=booked_slot_ids)
+
+    data = [
+        {'id': slot.time.id, 'time': slot.time.time} 
+        for slot in available_slots
+    ]
+    return JsonResponse({'slots': data})
+
 @login_required(login_url='login')
 def booking(request):
 
@@ -136,6 +169,24 @@ def booking(request):
         if not all([fname, phone,date, time_id, vehicle_id, package_id]):
             messages.error(request, "All fields are required")
             return redirect(request.path)
+        
+        booking_date = datetime.strptime(date, "%Y-%m-%d").date()
+        today = timezone.now().date()
+
+        if booking_date < today:
+            messages.error(request, "Can't book a past date")
+            return redirect('home')
+        is_overlapping = Booking.objects.filter(
+    vehicle_id=vehicle_id,
+    is_active=True,
+    booking_date__lte=booking_date,
+    expiry_date__gte=booking_date,
+    trial_time__time_id=time_id # Checks if the specific slot is taken within a duration
+).exists()
+
+        if is_overlapping:
+            messages.error(request, "This vehicle is already booked for the selected duration.")
+            return redirect(request.path)
 
         selected_vehicle = get_object_or_404(Vehicle, id=vehicle_id)
         selected_package = get_object_or_404(Package, id=package_id)
@@ -144,6 +195,7 @@ def booking(request):
             time_id=time_id,
             vehicle_id=selected_vehicle_id
         )
+        
 
 
         payment_uuid = str(uuid.uuid4())

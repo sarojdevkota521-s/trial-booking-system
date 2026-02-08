@@ -138,9 +138,16 @@
             {% if booking.payment_status %}
               <span class="badge badge-success">Paid</span>
             {% else %}
+
               <span class="badge badge-danger">Pending</span>
+              <center> 
+            <a href="{% url 'esewa'%}?p={{booking.package.id}}&uuid={{booking.payment_uuid}} " class="download-btn">
+        <span class="download-icon"></span>PAY
+    </a> 
+          </center>
             {% endif %}
           </div>
+          
         </div>
         <style>
     .download-btn {

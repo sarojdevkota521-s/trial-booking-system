@@ -1,6 +1,6 @@
 {% extends "main.html" %}
 {% load static %}
- {% comment %} <style>
+ <style>
     body {
         margin: 0;
         padding: 0;
@@ -62,7 +62,7 @@
     .book-btn:hover {
         background: #0056b3;
     }
-</style>  {% endcomment %}
+</style>  
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/vehicle.css' %}">
@@ -82,7 +82,7 @@
 <div class="vehicle-container">
     {% for i in car %}
         <div class="vehicle-card">
-            <img src="{{ i.photo.url }}" alt="vehicle image">
+            <img src= '{{ i.photo.url }}' alt="vehicle image">
             <div class="vehicle-name">{{ i.name }}</div>
             <div class="vehicle-category">{{ i.catogery.name }}</div>
             <div class="availability-status">
@@ -129,5 +129,5 @@
     {% endfor %}
 </div>
 
-\
+
 {% endblock %}

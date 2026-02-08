@@ -1,3 +1,12 @@
+{% extends 'main.html' %}   
+
+{% block title %}Book{% endblock %}
+
+{% block extra_css %} 
+
+{% endblock %}
+
+{% block content %}
 <style>
     body {
         margin: 0;
@@ -12,6 +21,21 @@
         margin-top: 20px;
         color: #1f3c88;
     }
+    .booking-container > div:last-child {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.package-card {
+    border-left: 4px solid #1f3c88;
+    transition: 0.3s;
+}
+
+.package-card:hover {
+    transform: translateY(-3px);
+}
 
     h3 {
         text-align: center;
@@ -119,13 +143,7 @@
 
 <h1>Booking Page</h1>
 <h3>welcome to the booking page</h3>
-<style>
-    .booking-container{
-        display:grid;
-        grid-template-columns: 3fr 2fr ;
 
-    }
-</style>
 <div class ="booking-container">
     <div>
         <h2>please fill the form to book {{ selected_vehicle_name }}</h2>
@@ -134,7 +152,7 @@
         <form action="" method="post">
             {% csrf_token %}
             <label for="fname">Full Name:</label><br>
-            <input type="text" id="fname" name="fname" placeholder="Enter your full name"><br>
+            <input type="text" id="fname" name="fname" value={{request.user}} placeholder="Enter your full name"><br>
             <label for="phone">Phone Number:</label><br>
             <input type="tel" id="phone" name="phone" placeholder="Enter your phone number"><br>
              <label for="phone">Date:</label><br>
@@ -186,3 +204,4 @@
         <hr>
    {% endfor %} 
     </div>
+    {% endblock %}
