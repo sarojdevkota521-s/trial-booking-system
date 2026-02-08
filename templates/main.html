@@ -368,28 +368,31 @@ html, body {
 
 
 <script>
-document.getElementById('date').addEventListener('change', updateTimes);
-document.getElementById('vehicle').addEventListener('change', updateTimes);
+    const dateInput = document.getElementById('date');
+    const vehicleInput = document.getElementById('vehicle');
+    const timeDropdown = document.querySelector('select[name="time"]');
 
-function updateTimes() {
-    const date = document.getElementById('date').value;
-    const vehicleId = document.getElementById('vehicle').value;
-    const timeSelect = document.querySelector('select[name="time"]');
+    function refreshTimes() {
+        const date = dateInput.value;
+        const vehicle = vehicleInput.value;
 
-    if (!date || !vehicleId) return;
+        if (date && vehicle) {
+            fetch(`/ajax/get-times/?date=${date}&vehicle_id=${vehicle}`)
+                .then(res => res.json())
+                .then(data => {
+                    timeDropdown.innerHTML = '<option value="">-- Choose Time --</option>';
+                    data.slots.forEach(slot => {
+                        let opt = document.createElement('option');
+                        opt.value = slot.id;
+                        opt.innerText = slot.time;
+                        timeDropdown.appendChild(opt);
+                    });
+                });
+        }
+    }
 
-    fetch(`/ajax/get-times/?date=${date}&vehicle_id=${vehicleId}`)
-        .then(response => response.json())
-        .then(data => {
-            timeSelect.innerHTML = '<option value="">-- Select Time --</option>';
-            data.slots.forEach(slot => {
-                const opt = document.createElement('option');
-                opt.value = slot.id;
-                opt.innerHTML = slot.time;
-                timeSelect.appendChild(opt);
-            });
-        });
-}
+    dateInput.addEventListener('change', refreshTimes);
+    vehicleInput.addEventListener('change', refreshTimes);
 </script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>

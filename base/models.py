@@ -70,11 +70,11 @@ class Booking(models.Model):
     expiry_date = models.DateField(blank=True, null=True)
     is_active=models.BooleanField(default=False)
 
-    def save(self, *args, **kwargs):
-        if not self.expiry_date and self.package:
+    # def save(self, *args, **kwargs):
         
-            self.expiry_date = self.booking_date + timedelta(days=self.package.duration_days)
-        super().save(*args, **kwargs)
+    #     if not self.expiry_date:
+    #         self.expiry_date = self.booking_date + timedelta(days=self.package.duration_days)
+    #     super().save(*args, **kwargs)
 
     def is_expired(self):
         

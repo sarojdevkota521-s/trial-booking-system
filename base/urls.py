@@ -14,7 +14,7 @@ urlpatterns=[
     path('about/', views.about, name='about'),
     path('contact/', views.contact, name='contact'),
     path('detail/', views.detail, name='detail'),
-    path('ajax/get-times/', views.get_available_times, name='get_available_times'),
+    path('ajax/get-times/', views.ajax_get_available_times, name='get_available_times'),
 
 
     

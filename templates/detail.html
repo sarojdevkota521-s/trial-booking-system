@@ -96,38 +96,41 @@
         <h1>Schedule & Team</h1>
         <p>Explore our available slots and meet our expert trainers.</p>
     </header>
-
-    <section>
-        <h3>Vehicle Availability</h3>
-        <div class="table-container">
-            <table class="detail-table">
-                <thead>
+<section>
+    <h3>Check Availability by Date</h3>
+    <form method="GET" action="{% url 'detail' %}">
+    <label>Check Availability for:</label>
+    <input type="date" name="date" value="{{ selected_date }}" onchange="this.form.submit()">
+</form>
+    <div class="table-container">
+        <table class="detail-table">
+            <thead>
+                <tr>
+                    <th>Vehicle (Date: {{ selected_date }})</th>
+                    {% for t in time_slots %}
+                        <th>{{ t.time }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in table_data %}
                     <tr>
-                        <th>Vehicle</th>
-                        {% for t in time_slots %}
-                            <th>{{ t.time }}</th>
+                        <td><strong>{{ row.vehicle_name }}</strong></td>
+                        {% for is_booked in row.slots %}
+                            <td style="text-align: center;">
+                                {% if is_booked %}
+                                    <span class="status-badge status-booked">Booked</span>
+                                {% else %}
+                                    <span class="status-badge status-available">Available</span>
+                                {% endif %}
+                            </td>
                         {% endfor %}
                     </tr>
-                </thead>
-                <tbody>
-                    {% for row in table_data %}
-                        <tr>
-                            <td><strong>{{ row.vehicle_name }}</strong></td>
-                            {% for is_booked in row.slots %}
-                                <td style="text-align: center;">
-                                    {% if is_booked %}
-                                        <span class="status-badge status-booked">Booked</span>
-                                    {% else %}
-                                        <span class="status-badge status-available">Available</span>
-                                    {% endif %}
-                                </td>
-                            {% endfor %}
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </section>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
 
     <hr style="margin: 50px 0; border: 0; border-top: 1px solid #e5e7eb;">
 
