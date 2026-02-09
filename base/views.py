@@ -18,8 +18,7 @@ from django.db import IntegrityError
 # Create your views here.
 
 def home(request):
-    # c=Vehicle.objects.filter(catogery__name='car')
-    # b=Vehicle.objects.filter(catogery__name='bike')
+   
     base_query = Vehicle.objects.annotate(
         available_slots_count=Count(
             'trialtime',
@@ -56,15 +55,12 @@ def detail(request):
     time_slots = Timeslot.objects.all()
     trainers = Trainer.objects.all()
 
-    # Get the date from the search bar, default to today
     date_query = request.GET.get('date')
     if date_query:
         selected_date = datetime.strptime(date_query, "%Y-%m-%d").date()
     else:
         selected_date = timezone.now().date()
 
-    # CRITICAL LOGIC: Find bookings where the selected date is 
-    # BETWEEN the start (booking_date) and the end (expiry_date)
     active_bookings = Booking.objects.filter(
         is_active=True,
         booking_date__lte=selected_date,  # Started on or before selected date
@@ -83,7 +79,7 @@ def detail(request):
             'slots': []
         }
         for slot in time_slots:
-            # If the pair exists in our filtered range, mark as booked
+           
             is_booked = (vehicle.id, slot.id) in booked_pairs
             row['slots'].append(is_booked)
         table_data.append(row)
@@ -130,7 +126,6 @@ def ajax_get_available_times(request):
 
     selected_date = datetime.strptime(date_str, "%Y-%m-%d").date()
 
-    # Find IDs of timeslots that are already booked for this specific date range
     booked_timeslot_ids = Booking.objects.filter(
         vehicle_id=vehicle_id,
         is_active=True,
@@ -138,8 +133,6 @@ def ajax_get_available_times(request):
         expiry_date__gte=selected_date
     ).values_list('trial_time__time_id', flat=True)
 
-    # Get available Timeslots for this vehicle
-    # First, get all trial times for the vehicle
     available_trial_times = TrialTime.objects.filter(
         vehicle_id=vehicle_id
     ).exclude(time_id__in=booked_timeslot_ids)
@@ -148,117 +141,7 @@ def ajax_get_available_times(request):
     return JsonResponse({'slots': data})
 
 @login_required(login_url='login')
-# def booking(request):
-
-#     selected_vehicle_id = request.GET.get('vehicle')
-#     selected_vehicle_name = request.GET.get('type')
-
-#     packages = Package.objects.filter(vehicle__name=selected_vehicle_name)
-#     vehicles = Vehicle.objects.filter(catogery__name=selected_vehicle_name)
-
-#     active_booked_timeslot_ids = Booking.objects.filter(
-#         is_active=True,
-#         vehicle_id=selected_vehicle_id
-#     ).values_list('trial_time__time_id', flat=True)
-
-#     available_trial_times = Timeslot.objects.exclude(
-#         id__in=active_booked_timeslot_ids
-#     )
-    
-    
-
-#     #  HANDLE POST AND RETURN
-#     if request.method == 'POST':
-#         fname = request.POST.get('fname')
-#         phone = request.POST.get('phone')
-#         date=request.POST.get('date')
-#         message = request.POST.get('message')
-#         time_id = request.POST.get('time')
-#         vehicle_id = request.POST.get('vehicle')
-#         package_id = request.POST.get('package')
-
-#         if not all([fname, phone,date, time_id, vehicle_id, package_id]):
-#             messages.error(request, "All fields are required")
-#             return redirect(request.path)
-        
-#         booking_date = datetime.strptime(date, "%Y-%m-%d").date()
-#         today = timezone.now().date()
-       
-        
-#         if booking_date < today:
-#             messages.error(request, "Can't book a past date")
-#             return redirect('home')
-#         is_overlapping = Booking.objects.filter(
-#     vehicle_id=vehicle_id,
-#     is_active=True,
-#     booking_date__lte=booking_date,
-#     expiry_date__gte=booking_date,
-#     trial_time__time_id=time_id # Checks if the specific slot is taken within a duration
-# ).exists()
-
-#         if is_overlapping:
-#             messages.error(request, "This vehicle is already booked for the selected duration.")
-#             return redirect(request.path)
-
-#         selected_vehicle = get_object_or_404(Vehicle, id=vehicle_id)
-#         selected_package = get_object_or_404(Package, id=package_id)
-#         selected_trial_time = get_object_or_404(
-#             TrialTime,
-#             time_id=time_id,
-#             vehicle_id=selected_vehicle_id
-#         )
-#         x=timedelta(days=selected_package.duration_days)
-#         exp=booking_date+x
-        
-
-#         payment_uuid = str(uuid.uuid4())
-#         duplicate_exists = Booking.objects.filter(
-#     vehicle_id=vehicle_id,
-#     trial_time=selected_trial_time, # Use the object you fetched
-#     booking_date=booking_date,
-#     is_active=True
-# ).exists()
-
-#         if duplicate_exists:
-#             messages.error(request, "This specific time slot has just been booked. Please choose another.")
-#             return redirect(request.path)
-
-#         try:
-#             Booking.objects.create(...)
-#         except IntegrityError:
-#             messages.error(request, "A system error occurred. Please try again.")
-#             return redirect(request.path)
-
-
-#         Booking.objects.create(
-#             user=request.user,
-#             customer_name=fname,
-#             phone_number=phone,
-#             booking_date=date,
-#             trial_time=selected_trial_time,
-#             message=message,
-#             vehicle=selected_vehicle,
-#             package=selected_package,
-#             expiry_date=exp,
-#             payment_uuid=payment_uuid,
-#             payment_status=False
-
-#         )
-
-#         return redirect(
-#             reverse('esewa') + f'?p={selected_package.id}&uuid={payment_uuid}'
-#         )
-
-   
-#     return render(request, 'booking.html', {
-#         'packages': packages,
-#         'vehicle': vehicles,
-#         'available_trial_times': available_trial_times,
-#         'selected_vehicle_id': selected_vehicle_id,
-#         'selected_vehicle_name': selected_vehicle_name
-#     })
 def booking(request):
-    # GET parameters for initial load
     selected_vehicle_id = request.GET.get('vehicle')
     selected_vehicle_name = request.GET.get('type')
     
@@ -275,7 +158,7 @@ def booking(request):
         phone = request.POST.get('phone')
         date_str = request.POST.get('date')
         message = request.POST.get('message')
-        time_id = request.POST.get('time')  # This is the ID of the Timeslot
+        time_id = request.POST.get('time') 
         vehicle_id = request.POST.get('vehicle')
         package_id = request.POST.get('package')
 
@@ -289,16 +172,10 @@ def booking(request):
             messages.error(request, "Can't book a past date")
             return redirect(request.path)
 
-        # 1. Fetch related objects
         selected_vehicle = get_object_or_404(Vehicle, id=vehicle_id)
         selected_package = get_object_or_404(Package, id=package_id)
         selected_trial_time = get_object_or_404(TrialTime, time_id=time_id, vehicle_id=vehicle_id)
-
-        # 2. Calculate Expiry
         expiry_date = booking_date + timedelta(days=selected_package.duration_days)
-
-        # 3. OVERLAP LOGIC: Check if this vehicle is busy during the requested date
-        # This checks if ANY existing active booking's range covers our requested booking_date
         is_overlapping = Booking.objects.filter(
             vehicle=selected_vehicle,
             is_active=True,
@@ -310,8 +187,6 @@ def booking(request):
         if is_overlapping:
             messages.error(request, "This vehicle is already booked for this duration/time.")
             return redirect(request.path)
-
-        # 4. Create the Booking
         try:
             payment_uuid = str(uuid.uuid4())
             expiry_date = booking_date + timedelta(days=selected_package.duration_days)
@@ -437,3 +312,4 @@ def esewa_success(request):
 
     messages.error(request, "Payment failed")
     return redirect('booking')
+

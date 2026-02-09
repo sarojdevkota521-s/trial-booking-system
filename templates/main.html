@@ -22,6 +22,7 @@
         padding: 10px 40px;
         font-family: 'Segoe UI', Roboto, sans-serif;
     }
+    
 
     /* Logo Design */
     .logo-link {
@@ -66,28 +67,6 @@
         color: #000 !important;
     }
 
-    /* Search Bar Design */
-    .search-wrapper {
-        display: flex;
-        align-items: center;
-    }
-
-    .search-input {
-        padding: 8px 15px;
-        border-radius: 20px; /* Rounded look */
-        border: 1px solid #444;
-        background: #333;
-        color: white;
-        outline: none;
-        transition: width 0.4s ease, border-color 0.3s;
-        width: 180px;
-    }
-
-    .search-input:focus {
-        border-color: #ede2d2;
-        width: 220px;
-        background: #444;
-    }
 </style>
     <div style="background-color: #4e4b4bff; padding: 20px; display: flex; align-items:center; justify-content: space-between; font-family: Arial, sans-serif;">
         
@@ -103,9 +82,6 @@
         <a href="{% url 'contact' %}" class="nav-item">Contact</a>
     </div>
 
-    <div class="search-wrapper">
-        <input type="text" placeholder="Search..." class="search-input">
-    </div>
 </div>
                   
 
@@ -187,135 +163,8 @@
         {% endblock %}
  </div>
 
-        <style>.footer-section {
-    background-color:  #4e4b4bff;
-    color: #d1d1d1;
-    padding: 70px 0 20px;
-    font-family: 'Segoe UI', sans-serif;
-}
-html, body {
-    height: 100%;
-}
-
-.page-wrapper {
-    min-height: calc(100vh - 320px); /* footer height estimate */
-}
-.footer-container {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 40px;
-    padding: 0 20px;
-}
-
-.footer-col h4 {
-    color: #ffffff;
-    font-size: 1.2rem;
-    margin-bottom: 25px;
-    position: relative;
-    padding-bottom: 10px;
-}
-
-.footer-col h4::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 30px;
-    height: 2px;
-    background-color: #3498db;
-} 
-
-.footer-logo {
-    color: #fff;
-    margin-bottom: 20px;
-}
-
-.footer-logo span {
-    color: #3498db;
-}
-
-/* Links and Lists */
-.footer-col ul {
-    list-style: none;
-    padding: 0;
-}
-
-.footer-col ul li {
-    margin-bottom: 12px;
-}
-
-.footer-col ul li a {
-    color: #d1d1d1;
-    text-decoration: none;
-    transition: 0.3s;
-}
-
-.footer-col ul li a:hover {
-    color: #3498db;
-    padding-left: 5px;
-}
-
-/* Specific to Hours */
-.hours-list li span {
-    font-weight: bold;
-    color: #fff;
-}
-
-.closed {
-    color: #e74c3c !important;
-}
-
-/* Contact and Icons */
-.contact-info p {
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.contact-info i {
-    color: #3498db;
-}
-
-.social-links {
-    margin-top: 20px;
-}
-
-.social-links a {
-    display: inline-block;
-    width: 35px;
-    height: 35px;
-    background: #333;
-    color: #fff;
-    text-align: center;
-    line-height: 35px;
-    border-radius: 50%;
-    margin-right: 10px;
-    transition: 0.3s;
-}
-
-.social-links a:hover {
-    background: #3498db;
-    transform: translateY(-3px);
-}
-
-/* Bottom Bar */
-.footer-bottom {
-    text-align: center;
-    margin-top: 50px;
-    padding-top: 20px;
-    border-top: 1px solid #333;
-    font-size: 0.9rem;
-}
-
-@media (max-width: 768px) {
-    .footer-container {
-        grid-template-columns: 1fr 1fr;
-    }
-}</style>
-        <footer class="footer-section">
+   
+        <footer class="footer-section"style="background-color: #4e4b4bff;">
     <div class="footer-container">
         <div class="footer-col">
             <h3 class="footer-logo">Trial<span>Center</span></h3>
@@ -328,17 +177,17 @@ html, body {
         </div>
 
         <div class="footer-col">
-            <h4>Quick Links</h4>
+            <h5>Quick Links</h5>
             <ul>
                 <li><a href="/">Home</a></li>
                 <li><a href="/about">About Us</a></li>
-                <li><a href="/details">Available Vehicles</a></li>
+                <li><a href="/detail">Available Vehicles</a></li>
                 <li><a href="/contact">Book a Trial</a></li>
             </ul>
         </div>
 
         <div class="footer-col">
-            <h4>Working Hours</h4>
+            <h5>Working Hours</h5>
             <ul class="hours-list">
                 <li><span>Mon - Fri:</span> 8:00 AM - 6:00 PM</li>
                 <li><span>Saturday:</span> 9:00 AM - 4:00 PM</li>
@@ -347,7 +196,7 @@ html, body {
         </div>
 
         <div class="footer-col">
-            <h4>Contact Us</h4>
+            <h5>Contact Us</h5>
             <div class="contact-info">
                 <p><i class="fas fa-map-marker-alt"></i> 123 Street, Kathmandu, Nepal</p>
                 <p><i class="fas fa-phone-alt"></i> +977 1-4000000</p>
