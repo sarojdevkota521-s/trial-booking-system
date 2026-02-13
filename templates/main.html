@@ -15,7 +15,7 @@
     <body>
         <style>
     .nav-container {
-        background-color:  #4e4b4bff; /* Dark background */
+        background-color:  #2c3e50 ; /*#4e4b4bff;  Dark background */
         display: flex;
         align-items: center;
         justify-content: space-between; /* Pushes search to the right */
@@ -68,7 +68,7 @@
     }
 
 </style>
-    <div style="background-color: #4e4b4bff; padding: 20px; display: flex; align-items:center; justify-content: space-between; font-family: Arial, sans-serif;">
+    <div style="background-color: #2c3e50 ; padding: 20px; display: flex; align-items:center; justify-content: space-between; font-family: Arial, sans-serif;">
         
         <!-- Left: Navigation Links -->
        <div class="nav-container">
@@ -179,10 +179,10 @@
         <div class="footer-col">
             <h5>Quick Links</h5>
             <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/about">About Us</a></li>
-                <li><a href="/detail">Available Vehicles</a></li>
-                <li><a href="/contact">Book a Trial</a></li>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'about' %}">About Us</a></li>
+                <li><a href="{% url 'detail' %}">Available Vehicles</a></li>
+                <li><a href="{% url 'contact' %}">Book a Trial</a></li>
             </ul>
         </div>
 

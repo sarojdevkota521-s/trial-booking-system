@@ -78,7 +78,7 @@
     color: #991b1b;
   }
 </style>
-
+{% if is_user %}
 <div class="profile-wrapper">
 
   <!-- PROFILE CARD -->
@@ -188,5 +188,8 @@
   </div>
 
 </div>
+{%else%}
+<h1> Access Denied</h1>
+{%endif %}
 
 {% endblock %}

@@ -21,11 +21,12 @@ def profile(request, pk):
     user = get_object_or_404(User, pk=pk)
     obj=Booking.objects.filter(user=user)
     # obj=user.objects.get(user_id=pk)
-    
+    is_user=request.user==user
 
     context = {
         'user': user,
         'obj':obj,
+        "is_user":is_user
         
         # 'obj':obj
     }
