@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -100,7 +101,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+# JAZZMIN_UI_TWEAKS = {
+#     'background': '#2c3e50',
+#     "theme": "flatly",
+#     "dark_mode_theme": "darkly",
+# }
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
