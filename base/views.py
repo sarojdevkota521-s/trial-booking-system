@@ -203,7 +203,9 @@ def booking(request):
             payment_uuid=payment_uuid,
             is_active=True # Mark active so the next check sees it
         )
+            messages.success(request, "Booking created successfully! Redirecting to payment...")
             return redirect(reverse('esewa') + f'?p={selected_package.id}&uuid={payment_uuid}')
+             
 
         except IntegrityError:
             messages.error(request, "A booking already exists for this exact date and time.")

@@ -11,6 +11,7 @@ from django.utils import timezone
 from django.urls import reverse
 from .models import *
 from base.models import Booking
+from .forms import RegisterForm
 # from .forms import ProfileUpdateForm
 # from .models import Profile
 
@@ -34,42 +35,52 @@ def profile(request, pk):
 
 
 def RegisterView(request):
-
     if request.method == "POST":
-        first_name = request.POST.get('first_name', '').strip()
-        last_name = request.POST.get('last_name', '').strip()
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-
-        user_data_has_error = False
-
-        if User.objects.filter(username=username).exists():
-            user_data_has_error = True
-            messages.error(request, "Username already exists")
-
-        if User.objects.filter(email=email).exists():
-            user_data_has_error = True
-            messages.error(request, "Email already exists")
-
-        if len(password) < 5:
-            user_data_has_error = True
-            messages.error(request, "Password must be at least 5 characters")
-
-        if user_data_has_error:
-            return redirect('register')
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, "Account created successfully!")
+            return redirect("login")
         else:
-            new_user = User.objects.create_user(
-                first_name=first_name,
-                last_name=last_name,
-                email=email, 
-                username=username,
-                password=password
-            )
-            messages.success(request, "Account created. Login now")
-            return redirect('login')
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = RegisterForm()
+    # if request.method == "POST":
+    #     first_name = request.POST.get('first_name', '').strip()
+    #     last_name = request.POST.get('last_name', '').strip()
+    #     username = request.POST.get('username')
+    #     email = request.POST.get('email')
+    #     password = request.POST.get('password')
 
-    return render(request, 'account/register.html')
+    #     user_data_has_error = False
+
+    #     if User.objects.filter(username=username).exists():
+    #         user_data_has_error = True
+    #         messages.error(request, "Username already exists")
+
+    #     if User.objects.filter(email=email).exists():
+    #         user_data_has_error = True
+    #         messages.error(request, "Email already exists")
+
+    #     if len(password) < 5:
+    #         user_data_has_error = True
+    #         messages.error(request, "Password must be at least 5 characters")
+
+    #     if user_data_has_error:
+    #         return redirect('register')
+    #     else:
+    #         new_user = User.objects.create_user(
+    #             first_name=first_name,
+    #             last_name=last_name,
+    #             email=email, 
+    #             username=username,
+    #             password=password
+    #         )
+    #         messages.success(request, "Account created. Login now")
+    #         return redirect('login')
+
+    return render(request, 'account/register.html', {'form': form})
 
 def LoginView(request):
 

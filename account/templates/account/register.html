@@ -1,49 +1,68 @@
+
 {%extends 'main.html'%}
 {% load static %}
 {% block content %}
     <div class="center">
       <h1>Register</h1>
        
-
-
-      <form method="POST" action="">
+        <form method="POST" action="">
         {% csrf_token %}
       
         <div class="txt_field">
-            <input type="text" required name='first_name'>
+            {{ form.first_name }}
             <span></span>
             <label>First Name</label>
           </div>
 
           <div class="txt_field">
-            <input type="text" required name='last_name'>
+            {{ form.last_name }}
             <span></span>
             <label>Last Name</label>
           </div>
 
         <div class="txt_field">
-          <input type="text" required name='username'>
+          {{ form.username }}
           <span></span>
           <label>Username</label>
+          {% if form.username.errors %}
+            <div class="error">
+                {{ form.username.errors.0 }}
+            </div>
+        {% endif %}
         </div>
 
         <div class="txt_field">
-            <input type="email" required name='email'>
+            {{ form.email }}
             <span></span>
             <label>Email</label>
+            {% if form.email.errors %}
+                <div class="error">
+                    {{ form.email.errors.0 }}
+                </div>
+            {% endif %}
           </div>
 
         <div class="txt_field">
-          <input type="password" required name='password'>
+          {{ form.password1 }}
           <span></span>
           <label>Password</label>
+          {% if form.password1.errors %}
+            <div class="error">
+                {{ form.password1.errors.0 }}
+            </div>
+        {% endif %}
         </div>    
 
         
         <div class="txt_field">
-          <input type="password" required name='password1'>
+          {{ form.password2 }}
           <span></span>
           <label>Confirm Password</label>
+          {% if form.password2.errors %}
+            <div class="error">
+                {{ form.password2.errors.0 }}
+            </div>
+        {% endif %}
         </div>    
 
 
@@ -52,6 +71,6 @@
         <div class="signup_link">
           Already have an account? <a href="{% url 'login' %}">Login</a>
         </div>
-      </form>
+      </form> 
     </div>
 {% endblock %}

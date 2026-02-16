@@ -34,6 +34,11 @@ body{
   box-shadow: 0 10px 40px rgba(0,0,0,0.3);
   z-index: 2000;
 }
+.error {
+    color: red;
+    font-size: 13px;
+    margin-top: 5px;
+}
 
 /* Backdrop for modal */
 body.modal-open::before {
@@ -60,6 +65,7 @@ form .txt_field{
   position: relative;
   border-bottom: 2px solid #adadad;
   margin: 30px 0;
+  
 }
 .txt_field input{
   width: 100%;
