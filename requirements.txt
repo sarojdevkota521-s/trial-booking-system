@@ -4,3 +4,5 @@ gunicorn
 django
 django-jazzmin
 whitenoise
+xhtml2pdf
+reportlab
