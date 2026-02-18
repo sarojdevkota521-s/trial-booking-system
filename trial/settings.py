@@ -24,10 +24,16 @@ SECRET_KEY = 'django-insecure-3gqn7yd_ox93o4db2d!k_ke+x$pa(9kngt0bo8fwwt@+@jm47m
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+ALLOWED_HOSTS = [
+    'trial-booking-system.onrender.com', 
+    '127.0.0.1', 
+    'localhost'
+]
 
-ALLOWED_HOSTS = []
-
-
+# 2. While you're at it, fix the CSRF security too (Render requires this for forms)
+CSRF_TRUSTED_ORIGINS = [
+    'https://trial-booking-system.onrender.com'
+]
 # Application definition
 
 INSTALLED_APPS = [
