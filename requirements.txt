@@ -3,3 +3,4 @@ pymupdf
 gunicorn
 django
 django-jazzmin
+whitenoise
