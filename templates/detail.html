@@ -100,7 +100,7 @@
     <h3>Check Availability by Date</h3>
     <form method="GET" action="{% url 'detail' %}">
     <label>Check Availability for:</label>
-    <input type="date" name="date" value="{{ selected_date }}" onchange="this.form.submit()">
+    <input type="date" name="date" value="{{ selected_date }}" onchange="this.form.submit()" style="padding: 8px; border: 1px solid #d0d3d7; border-radius: 4px;">
 </form>
     <div class="table-container">
         <table class="detail-table">

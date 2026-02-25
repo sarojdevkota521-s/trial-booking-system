@@ -116,6 +116,7 @@ textarea.form-control {
 }
 </style>
 
+
 <section class="section-padding">
   <div class="container main-container">
     <div class="row g-5">
@@ -135,7 +136,7 @@ textarea.form-control {
                 <h5 class="mb-1">Office Address</h5>
                 <p class="mb-0 text-muted">
                   123 Main Street,<br>
-                  City, State, ZIP Code
+                  kathmandu, Bagmati, 12345
                 </p>
               </div>
             </div>
@@ -146,8 +147,8 @@ textarea.form-control {
               <div>
                 <h5 class="mb-1">Working Hours</h5>
                 <p class="mb-0 text-muted">
-                  Monday - Friday: 9:00 AM - 6:00 PM<br>
-                  Saturday - Sunday: Closed
+                  sunday - saturday: 5:00 AM - 6:00 PM<br>
+                  
                 </p>
               </div>
 
@@ -185,32 +186,33 @@ textarea.form-control {
                 <p class="subtitle">
                   Have questions? We'd love to hear from you.
                 </p>
-                <form>
+                <form method="post" action="{% url 'contact' %}">
+                  {% csrf_token %}
                   
                   <div class="row g-4">
                     <div class="col-md-6">
                         <label for="firstName" class="form-label">First Name</label>
-                        <input type="text" class="form-control" id="firstName" placeholder="First Name" required>
+                        <input type="text" name="firstName" class="form-control" id="firstName" placeholder="First Name" required>
                     </div>
                     <div class="col-md-6">
                         <label for="lastName" class="form-label">Last Name</label>
-                        <input type="text" class="form-control" id="lastName" placeholder="Last Name" required>
+                        <input type="text" name="lastName" class="form-control" id="lastName" placeholder="Last Name" required>
                     </div>
                     <div class="col-md-6">
                         <label for="emailAddress" class="form-label">Email Address</label>
-                        <input type="email" class="form-control" id="emailAddress" placeholder="Email Address" required>
+                        <input type="email" name="emailAddress" class="form-control" id="emailAddress" placeholder="Email Address" required>
                     </div>
                     <div class="col-md-6">
                         <label for="phoneNumber" class="form-label">Phone Number</label>
-                        <input type="tel" class="form-control" id="phoneNumber" placeholder="Phone Number">
+                        <input type="tel" name="phoneNumber" class="form-control" id="phoneNumber" placeholder="Phone Number">
                     </div>
                     <div class="col-12">
                         <label for="subject" class="form-label">Subject</label>
-                        <input type="text" class="form-control" id="subject" placeholder="Subject" required>
+                        <input type="text" name="subject" class="form-control" id="subject" placeholder="Subject" required>
                     </div>
                     <div class="col-12">
                         <label for="message" class="form-label">Message</label>
-                        <textarea class="form-control" id="message" rows="6" placeholder="Write your message here..." required></textarea>  
+                        <textarea name="message" class="form-control" id="message" rows="6" placeholder="Write your message here... " required></textarea>  
                     </div>
                     </div>
                     <div class="mt-4 text-center text-lg-start">

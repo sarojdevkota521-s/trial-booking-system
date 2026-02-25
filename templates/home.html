@@ -15,7 +15,17 @@
                 </div>
             {% endfor %}
         {% endif %}
-
+{% if user.is_authenticated %}
+<div style="background-color: #f3f1e8; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+<h2>Welcome, {{ user.username }}!</h2>
+<p>Explore our available vehicles and book your next ride with us.</p>
+</div>
+{% else %}
+<div style="background-color:  #eeece2; color: #721c24; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+<h2> Welcome to our Trial Booking Service!</h2>
+<p> please <a style="text-decoration: none;" href ="{% url 'register' %}">Register</a>/<a style="text-decoration: none;" href ="{% url 'login' %}">Login</a> to see available package for vehicle</p>
+</div>
+{% endif %}
 <h2>Available Cars</h2>
 <div class="vehicle-container">
     {% for i in car %}

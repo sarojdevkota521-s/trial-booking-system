@@ -64,7 +64,9 @@ def detail(request):
     active_bookings = Booking.objects.filter(
         is_active=True,
         booking_date__lte=selected_date,  # Started on or before selected date
-        expiry_date__gte=selected_date   # Ends on or after selected date
+        expiry_date__gte=selected_date,
+        payment_status=True  
+        
     )
 
     # Create a lookup set for (vehicle_id, timeslot_id)
@@ -91,30 +93,88 @@ def detail(request):
         'trainers': trainers
     })
 
+from django.core.mail import send_mail
+from django.conf import settings
+
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from .models import ContactMessage
 def contact(request):
     if request.method == "POST":
-        # Extract data from the form
         first_name = request.POST.get('firstName')
         last_name = request.POST.get('lastName')
         email = request.POST.get('emailAddress')
         phone = request.POST.get('phoneNumber')
         subject = request.POST.get('subject')
-        message = request.POST.get('message')
+        message_text = request.POST.get('message')
 
-        # Save to database
         ContactMessage.objects.create(
             first_name=first_name,
             last_name=last_name,
             email=email,
             phone=phone,
             subject=subject,
-            message=message
+            message=message_text,
         )
-        
+
         messages.success(request, "Your message has been sent successfully!")
-        return redirect('contact') 
+        return redirect('contact')  # important!
+
     return render(request, 'contact.html')
 
+# def contact(request):
+#     if request.method == "POST":
+#         # first_name = request.POST.get('firstName', '').strip()
+#         # last_name = request.POST.get('lastName', '').strip()
+#         # email = request.POST.get('emailAddress', '').strip()
+#         # phone = request.POST.get('phoneNumber', '').strip()
+#         # subject = request.POST.get('subject', '').strip()
+#         # message = request.POST.get('message', '').strip()
+#         first_name = request.POST.get('firstName')
+#         last_name = request.POST.get('lastName')
+#         email = request.POST.get('emailAddress')    
+#         phone = request.POST.get('phoneNumber')
+#         subject = request.POST.get('subject')
+#         message = request.POST.get('message')
+
+       
+# #         try:
+# #             # Send email to ADMIN
+# #             send_mail(
+# #                 subject=f"New Contact Message from {first_name} {last_name}",
+# #                 message=f"""
+# # Name: {first_name} {last_name}
+# # Email: {email}
+# # Phone: {phone}
+# # Subject: {subject}
+
+# # Message:
+# # {message}
+# # """,
+# #                 from_email=settings.DEFAULT_FROM_EMAIL,
+# #                 recipient_list=[settings.DEFAULT_FROM_EMAIL],  # send to yourself
+# #                 fail_silently=False,
+# #             )
+
+#             # Save to database
+#         message=ContactMessage.objects.create(
+#                 first_name=first_name,
+#                 last_name=last_name,
+#                 email=email,
+#                 phone=phone,
+#                 subject=subject,
+#                 message=message,
+#             )
+#         message.save()
+#         print("Message saved to database:", message)
+        
+
+#         messages.success(request, "Your message has been sent successfully!")
+
+        
+#     return render(request, 'contact.html')
 from django.http import JsonResponse
 
 def ajax_get_available_times(request):
@@ -140,8 +200,15 @@ def ajax_get_available_times(request):
     data = [{'id': t.time.id, 'time': t.time.time} for t in available_trial_times]
     return JsonResponse({'slots': data})
 
+
+
 @login_required(login_url='login')
 def booking(request):
+    Booking.objects.filter(
+        expiry_date__lt=timezone.now().date(),
+        is_active=True
+    ).update(is_active=False)
+
     selected_vehicle_id = request.GET.get('vehicle')
     selected_vehicle_name = request.GET.get('type')
     
@@ -149,8 +216,6 @@ def booking(request):
     packages = Package.objects.filter(vehicle__name=selected_vehicle_name)
     vehicles = Vehicle.objects.filter(catogery__name=selected_vehicle_name)
 
-    # Note: On initial GET load, we don't know the date yet, 
-    # so we show all times for the vehicle until the user picks a date (handled by AJAX).
     available_trial_times = Timeslot.objects.all()
 
     if request.method == 'POST':
@@ -164,13 +229,13 @@ def booking(request):
 
         if not all([fname, phone, date_str, time_id, vehicle_id, package_id]):
             messages.error(request, "All fields are required")
-            return redirect(request.path)
+            return redirect(reverse('booking') + f'?vehicle={selected_vehicle_id}&type={selected_vehicle_name}')
 
         booking_date = datetime.strptime(date_str, "%Y-%m-%d").date()
         
         if booking_date < timezone.now().date():
             messages.error(request, "Can't book a past date")
-            return redirect(request.path)
+            return redirect(reverse('booking') + f'?vehicle={selected_vehicle_id}&type={selected_vehicle_name}')
 
         selected_vehicle = get_object_or_404(Vehicle, id=vehicle_id)
         selected_package = get_object_or_404(Package, id=package_id)
@@ -181,12 +246,13 @@ def booking(request):
             is_active=True,
             trial_time=selected_trial_time,
             booking_date__lte=booking_date,
-            expiry_date__gte=booking_date
+            expiry_date__gte=booking_date,
+            payment_status=True 
         ).exists()
 
         if is_overlapping:
             messages.error(request, "This vehicle is already booked for this duration/time.")
-            return redirect(request.path)
+            return redirect(reverse('booking') + f'?vehicle={selected_vehicle_id}&type={selected_vehicle_name}')
         try:
             payment_uuid = str(uuid.uuid4())
             expiry_date = booking_date + timedelta(days=selected_package.duration_days)
@@ -209,7 +275,7 @@ def booking(request):
 
         except IntegrityError:
             messages.error(request, "A booking already exists for this exact date and time.")
-            return redirect(request.path)
+            return redirect(reverse('booking') + f'?vehicle={selected_vehicle_id}&type={selected_vehicle_name}')
 
     return render(request, 'booking.html', {
         'packages': packages,

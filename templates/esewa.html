@@ -1,11 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eSewa Integration</title>
-<body>
+{% extends 'main.html' %}   
+{% load static %}
+
+{% block title %} eSewa Payment {% endblock %}
+
+{% block content %}
+<style>
+    .btn-primary.btn-lg {
+    background: linear-gradient(135deg, #2980b9, #8e44ad);
+    border: none;
+    padding: 12px 35px;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.btn-primary.btn-lg:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(142, 68, 173, 0.3);
+}
+</style>
      {% if messages %}
             {% for message in messages %}
                 <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
@@ -13,8 +26,9 @@
                 </div>
             {% endfor %}
         {% endif %}
+        <div style="background-color: #f3f1e8; color: #000000; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
     <h1>eSewa Payment Gateway Integration price is {{ price }}</h1>
-    <h2> just click on the button below to pay with eSewa</h2>
+    <h2> just click on the button below to pay with eSewa</h2></div>
  <form action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST">
 
 <input type="hidden" name="amount" value="{{ price }}">
@@ -31,7 +45,6 @@
 <input type="hidden" name="signed_field_names" value="{{ signed_field_names }}">
 <input type="hidden" name="signature" value="{{ signature }}">
 
-<button type="submit">Pay with eSewa</button>
+<button type="submit" class="btn btn-primary btn-lg" >Pay with eSewa</button>
 </form>
-</body>
-</html>
+{% endblock %}

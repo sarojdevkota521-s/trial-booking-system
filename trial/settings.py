@@ -23,12 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-3gqn7yd_ox93o4db2d!k_ke+x$pa(9kngt0bo8fwwt@+@jm47m'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-ALLOWED_HOSTS = [
-    'trial-booking-system.onrender.com', 
-    '127.0.0.1', 
-    'localhost'
-]
+DEBUG = True
+ALLOWED_HOSTS = []
+#     'trial-booking-system.onrender.com', 
+#     '127.0.0.1', 
+#     'localhost'
+# ]
 
 # 2. While you're at it, fix the CSRF security too (Render requires this for forms)
 CSRF_TRUSTED_ORIGINS = [
@@ -37,7 +37,6 @@ CSRF_TRUSTED_ORIGINS = [
 # Application definition
 
 INSTALLED_APPS = [
-    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -151,14 +150,14 @@ MEDIA_URL = '/media/'
 
 
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = '###.####.###' # Use your provider's SMTP server
-# EMAIL_PORT = ###
-# EMAIL_USE_TLS = True
-# # For Gmail, you need an App Password (not your regular password)
-# # after enabling 2-step verification in your Google Account security settings
-# EMAIL_HOST_USER = ' useremail@gmail.com'
-# EMAIL_HOST_PASSWORD = '#### #### #### ####'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com' # Use your provider's SMTP server
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+# For Gmail, you need an App Password (not your regular password)
+# after enabling 2-step verification in your Google Account security settings
+EMAIL_HOST_USER = 'sarojdevkota521@gmail.com'
+EMAIL_HOST_PASSWORD = 'ovfb qqop yial cwhw'
 
 # MEDIA_URL = '/media/'
 # MEDIA_ROOT = BASE_DIR / 'media'
@@ -167,5 +166,14 @@ MEDIA_URL = '/media/'
 # TEMPLATES[0]['OPTIONS']['context_processors'] += [
 #     'base.context_processors.notification_count',
 # ]
+# from decouple import config
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# DEFAULT_FROM_EMAIL = config('sarojdevkota521@gmail.com')
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = config('sarojdevkota521@gmail.com')
+# EMAIL_HOST_PASSWORD = config('ovfb qqop yial cwhw')
+
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
